@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Designer — Extensión para Chrome</title>
+  <meta name="description" content="Añade hermosos componentes visuales y diseños interactivos a tu editor de Canvas LMS en segundos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Decorative Background Glow -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="logo">🎨 Canvas Designer</div>
+      <div class="nav-links">
+        <a href="#features" data-i18n="nav_features">Características</a>
+        <a href="#install" data-i18n="nav_install">Instalación</a>
+        <a href="https://github.com/" target="_blank" class="github-link">GitHub</a>
+        <button id="theme-toggle" class="icon-btn" title="Toggle Theme">☀️</button>
+        <button id="lang-toggle" class="icon-btn" title="Toggle Language">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="hero-content">
+      <div class="badge" data-i18n="hero_badge">🚀 Versión Beta 1.0.0</div>
+      <h1 class="hero-title" data-i18n="hero_title">Crea diseños increíbles en <span class="highlight">Canvas LMS</span></h1>
+      <p class="hero-subtitle" data-i18n="hero_subtitle">Una extensión para profesores y diseñadores instruccionales. Añade tarjetas, botones, acordeones y más a tu contenido en segundos sin saber programar.</p>
+      
+      <div class="hero-actions">
+        <a href="./canvas-designer-v1.0.0.zip" download class="btn btn-primary">
+          <span class="icon">⬇️</span> <span data-i18n="hero_btn_download">Descargar ZIP (v1.0.0)</span>
+        </a>
+        <a href="#install" class="btn btn-secondary">
+          <span class="icon">📖</span> <span data-i18n="hero_btn_guide">Guía de Instalación</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="hero-visual">
+      <div class="glass-mockup">
+        <div class="mockup-header">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="mockup-title" data-i18n="mockup_title">Constructor Visual</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-skeleton"></div>
+          <div class="mockup-skeleton short"></div>
+          <div class="mockup-btn" data-i18n="mockup_btn">Añadir Componente ✨</div>
+          <div class="mockup-grid">
+            <div class="mockup-card"></div>
+            <div class="mockup-card"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features" class="features container">
+    <h2 class="section-title" data-i18n="feat_title">Diseñado para educadores</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧩</div>
+        <h3 data-i18n="feat_1_title">15+ Componentes</h3>
+        <p data-i18n="feat_1_desc">Tarjetas, héroes, acordeones, barras de progreso y más, listos para insertar en tu Rich Content Editor.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3 data-i18n="feat_2_title">Totalmente Personalizable</h3>
+        <p data-i18n="feat_2_desc">Ajusta colores, tamaños, bordes y fuentes usando el potente panel de diseño integrado en tu navegador.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💾</div>
+        <h3 data-i18n="feat_3_title">Plantillas Ilimitadas</h3>
+        <p data-i18n="feat_3_desc">Guarda tus combinaciones favoritas como plantillas, expórtalas y compártelas con tus colegas.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 data-i18n="feat_4_title">100% Seguro y Privado</h3>
+        <p data-i18n="feat_4_desc">Funciona offline. No requiere servidores externos ni bases de datos. Todo se guarda en tu propio navegador.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="install" class="install-section container">
+    <div class="install-wrapper glass-panel">
+      <h2 class="section-title" data-i18n="inst_title">Cómo instalar la Beta (Modo Desarrollador)</h2>
+      <p class="install-desc" data-i18n="inst_desc">Ya que la extensión aún no está en la Chrome Web Store, puedes instalarla manualmente siguiendo estos 4 sencillos pasos:</p>
+      
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3 data-i18n="step_1_title">Descarga y Descomprime</h3>
+          <p data-i18n="step_1_desc">Descarga el archivo <strong>.zip</strong> usando el botón de arriba y extráelo (descomprímelo) en una carpeta de tu computadora que no vayas a borrar.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3 data-i18n="step_2_title">Abre las Extensiones</h3>
+          <p data-i18n="step_2_desc">En tu navegador Chrome (o Edge/Brave), escribe <code>chrome://extensions/</code> en la barra de direcciones y presiona Enter.</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3 data-i18n="step_3_title">Activa el Modo Desarrollador</h3>
+          <p data-i18n="step_3_desc">En la esquina superior derecha de la pantalla, activa el interruptor que dice <strong>"Modo de desarrollador"</strong> (Developer mode).</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3 data-i18n="step_4_title">Carga la Extensión</h3>
+          <p data-i18n="step_4_desc">Haz clic en el botón <strong>"Cargar sin empaquetar"</strong> (Load unpacked) que aparecerá arriba a la izquierda. Selecciona la carpeta que descomprimiste en el paso 1.</p>
+        </div>
+      </div>
+
+      <div class="install-success">
+        <p data-i18n="inst_success">🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante "✨" en la esquina inferior derecha.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <p data-i18n="footer_copy">&copy; 2026 Canvas Designer. Una herramienta para mejorar la educación virtual.</p>
+      <div class="footer-links">
+        <a href="https://github.com/" target="_blank" data-i18n="footer_src">Código Fuente</a>
+        <a href="#" data-i18n="footer_bug">Reportar un Error</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

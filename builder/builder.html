@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Designer — Constructor de Estilos</title>
+  <link rel="stylesheet" href="builder.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-logo">
+      <div class="logo-icon">🎨</div>
+      <div>
+        <div>Canvas Designer</div>
+        <div class="logo-sub" id="hdr-sub">Constructor de Estilos</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Template Manager -->
+      <select id="ctrl-template-select" class="ctrl-select" style="max-width: 150px; margin-right: 4px;">
+        <option value="default">Plantilla Actual</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" id="btn-save-as" title="Guardar como nueva">➕</button>
+      <button class="btn btn-ghost btn-sm" id="btn-delete-tpl" title="Eliminar plantilla" style="display:none; color:#ef4444;">🗑️</button>
+      
+      <!-- Import / Export -->
+      <button class="btn btn-secondary btn-sm" id="btn-export" title="Descargar plantilla JSON">⬇️ Exportar</button>
+      <button class="btn btn-secondary btn-sm" id="btn-import" title="Cargar plantilla JSON">⬆️ Importar</button>
+      <input type="file" id="file-import" accept=".json" style="display:none;">
+      
+      <!-- Basics -->
+      <button class="btn btn-ghost btn-sm" id="btn-lang" style="margin-left:8px;">🌐 EN</button>
+      <button class="btn btn-secondary btn-sm" id="btn-reset">↺ Reset</button>
+      <button class="btn btn-primary btn-sm" id="btn-save">💾 <span id="lbl-save">Guardar librería</span></button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="app-main">
+
+    <!-- Preview -->
+    <div class="preview-area">
+      <div class="preview-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="preview-label" id="lbl-preview">Vista previa — Página de Canvas</span>
+      </div>
+      <div class="preview-wrap">
+        <div id="preview-canvas"></div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <aside class="controls-panel">
+      <div class="controls-tabs">
+        <button class="ctrl-tab active" data-tab="palette" id="tab-palette">🎨 Paleta</button>
+        <button class="ctrl-tab" data-tab="typography" id="tab-typography">Aa Tipografía</button>
+        <button class="ctrl-tab" data-tab="components" id="tab-components">⊞ Componentes</button>
+      </div>
+      <div class="controls-body">
+
+        <!-- PALETTE TAB -->
+        <div class="ctrl-pane active" id="pane-palette">
+          <div class="palette-grid" id="palette-grid">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- TYPOGRAPHY TAB -->
+        <div class="ctrl-pane" id="pane-typography">
+          <div class="field">
+            <div class="field-label"><span id="lbl-headingFont">Fuente de títulos</span></div>
+            <select class="ctrl-select" id="ctrl-typography-headingFont">
+              <option value="Georgia, serif">Georgia (Serif)</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="Palatino, serif">Palatino</option>
+              <option value="system-ui, sans-serif">System UI (Sans)</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+              <option value="'Courier New', monospace">Courier New (Mono)</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label"><span id="lbl-bodyFont">Fuente de cuerpo</span></div>
+            <select class="ctrl-select" id="ctrl-typography-bodyFont">
+              <option value="system-ui, Arial, sans-serif">System UI (Sans)</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+              <option value="Georgia, serif">Georgia (Serif)</option>
+              <option value="'Courier New', monospace">Courier New (Mono)</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label"><span id="lbl-baseSize">Tamaño base</span> <span id="val-baseSize">16px</span></div>
+            <input type="range" id="ctrl-typography-baseSize-range" min="13" max="20" value="16">
+          </div>
+          <div class="field">
+            <div class="field-label"><span id="lbl-lineHeight">Interlineado</span> <span id="val-lineHeight">1.6</span></div>
+            <input type="range" id="ctrl-typography-lineHeight-range" min="1.2" max="2.2" step="0.1" value="1.6">
+          </div>
+        </div>
+
+        <!-- COMPONENTS TAB -->
+        <div class="ctrl-pane" id="pane-components">
+
+          <!-- ① HERO -->
+          <div class="ctrl-section open" id="sec-hero">
+            <div class="ctrl-section-header" data-section="hero">
+              <span><span class="s-num">①</span><span class="s-icon">🎯</span><span id="lbl-compHero">Héroe</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <input class="ctrl-input" id="ctrl-hero-background" type="text" placeholder="#f3f4f6">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Imagen de Fondo (URL)</span></div>
+                <input class="ctrl-input" id="ctrl-hero-backgroundImage" type="text" placeholder="https://...">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-hero-color-picker">
+                  <input class="color-hex" id="ctrl-hero-color" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-hero-padding" type="text" placeholder="60px 40px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-hero-borderRadius" type="text" placeholder="12px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Alineación texto</span></div>
+                <select class="ctrl-select" id="ctrl-hero-textAlign">
+                  <option value="center">Centro</option>
+                  <option value="left">Izquierda</option>
+                  <option value="right">Derecha</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño título</span></div>
+                <input class="ctrl-input" id="ctrl-hero-titleSize" type="text" placeholder="2.2em">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color subtítulo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-hero-subtitleColor-picker">
+                  <input class="color-hex" id="ctrl-hero-subtitleColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño subtítulo</span></div>
+                <input class="ctrl-input" id="ctrl-hero-subtitleSize" type="text" placeholder="1.2em">
+              </div>
+            </div>
+          </div>
+
+          <!-- ② BANNER -->
+          <div class="ctrl-section" id="sec-banner">
+            <div class="ctrl-section-header" data-section="banner">
+              <span><span class="s-num">②</span><span class="s-icon">📢</span><span id="lbl-compBanner">Banner</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-banner-background-picker">
+                  <input class="color-hex" id="ctrl-banner-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-banner-color-picker">
+                  <input class="color-hex" id="ctrl-banner-color" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Borde izquierdo</span></div>
+                <input class="ctrl-input" id="ctrl-banner-borderLeft" type="text" placeholder="5px solid #3b82f6">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-banner-padding" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-banner-borderRadius" type="text" placeholder="0px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño fuente</span></div>
+                <input class="ctrl-input" id="ctrl-banner-fontSize" type="text" placeholder="1em">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Grosor fuente</span></div>
+                <input class="ctrl-input" id="ctrl-banner-fontWeight" type="text" placeholder="normal">
+              </div>
+            </div>
+          </div>
+
+          <!-- ① ALERTAS -->
+          <div class="ctrl-section" id="sec-alert">
+            <div class="ctrl-section-header" data-section="alert">
+              <span><span class="s-num">③</span><span class="s-icon">🔔</span><span id="lbl-compAlert">Alertas</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="ctrl-subsection-label">ℹ️ Info</div>
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-infoBackground-picker">
+                  <input class="color-hex" id="ctrl-alert-infoBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-infoColor-picker">
+                  <input class="color-hex" id="ctrl-alert-infoColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color borde</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-infoBorderColor-picker">
+                  <input class="color-hex" id="ctrl-alert-infoBorderColor" type="text">
+                </div>
+              </div>
+              <div class="ctrl-subsection-label">✅ Éxito</div>
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-successBackground-picker">
+                  <input class="color-hex" id="ctrl-alert-successBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-successColor-picker">
+                  <input class="color-hex" id="ctrl-alert-successColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color borde</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-successBorderColor-picker">
+                  <input class="color-hex" id="ctrl-alert-successBorderColor" type="text">
+                </div>
+              </div>
+              <div class="ctrl-subsection-label">⚠️ Aviso</div>
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-warningBackground-picker">
+                  <input class="color-hex" id="ctrl-alert-warningBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-warningColor-picker">
+                  <input class="color-hex" id="ctrl-alert-warningColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color borde</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-warningBorderColor-picker">
+                  <input class="color-hex" id="ctrl-alert-warningBorderColor" type="text">
+                </div>
+              </div>
+              <div class="ctrl-subsection-label">🚫 Error</div>
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-dangerBackground-picker">
+                  <input class="color-hex" id="ctrl-alert-dangerBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-dangerColor-picker">
+                  <input class="color-hex" id="ctrl-alert-dangerColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color borde</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-alert-dangerBorderColor-picker">
+                  <input class="color-hex" id="ctrl-alert-dangerBorderColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-alert-borderRadius" type="text" placeholder="8px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ④ BADGES -->
+          <div class="ctrl-section" id="sec-badge">
+            <div class="ctrl-section-header" data-section="badge">
+              <span><span class="s-num">④</span><span class="s-icon">🏷️</span><span id="lbl-compBadge">Insignias (Badges)</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-badge-background-picker">
+                  <input class="color-hex" id="ctrl-badge-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-badge-color-picker">
+                  <input class="color-hex" id="ctrl-badge-color" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-badge-borderRadius" type="text" placeholder="20px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-badge-padding" type="text" placeholder="3px 10px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño fuente</span></div>
+                <input class="ctrl-input" id="ctrl-badge-fontSize" type="text" placeholder="0.78em">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑤ TARJETAS -->
+          <div class="ctrl-section" id="sec-card">
+            <div class="ctrl-section-header" data-section="card">
+              <span><span class="s-num">⑤</span><span class="s-icon">🃏</span><span id="lbl-compCard">Tarjeta</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-card-background-picker">
+                  <input class="color-hex" id="ctrl-card-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Borde</span></div>
+                <input class="ctrl-input" id="ctrl-card-border" type="text" placeholder="1px solid #e2e8f0">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-card-borderRadius" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-card-padding" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color título</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-card-titleColor-picker">
+                  <input class="color-hex" id="ctrl-card-titleColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño título</span></div>
+                <input class="ctrl-input" id="ctrl-card-titleSize" type="text" placeholder="1.25em">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-card-textColor-picker">
+                  <input class="color-hex" id="ctrl-card-textColor" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑥ BOTONES -->
+          <div class="ctrl-section" id="sec-button">
+            <div class="ctrl-section-header" data-section="button">
+              <span><span class="s-num">⑥</span><span class="s-icon">🔘</span><span id="lbl-compButton">Botón</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-button-background-picker">
+                  <input class="color-hex" id="ctrl-button-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-button-color-picker">
+                  <input class="color-hex" id="ctrl-button-color" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-button-borderRadius" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-button-padding" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Tamaño fuente</span></div>
+                <input class="ctrl-input" id="ctrl-button-fontSize" type="text" placeholder="1em">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Grosor fuente</span></div>
+                <input class="ctrl-input" id="ctrl-button-fontWeight" type="text" placeholder="bold">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Borde</span></div>
+                <input class="ctrl-input" id="ctrl-button-border" type="text" placeholder="none">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑦ DESPLEGABLE -->
+          <div class="ctrl-section" id="sec-dropdown">
+            <div class="ctrl-section-header" data-section="dropdown">
+              <span><span class="s-num">⑦</span><span class="s-icon">📂</span><span id="lbl-compDropdown">Desplegable</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo menú</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-dropdown-menuBackground-picker">
+                  <input class="color-hex" id="ctrl-dropdown-menuBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto ítem</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-dropdown-itemColor-picker">
+                  <input class="color-hex" id="ctrl-dropdown-itemColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius menú</span></div>
+                <input class="ctrl-input" id="ctrl-dropdown-borderRadius" type="text" placeholder="8px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑧ ACORDEÓN -->
+          <div class="ctrl-section" id="sec-accordion">
+            <div class="ctrl-section-header" data-section="accordion">
+              <span><span class="s-num">⑧</span><span class="s-icon">📋</span><span id="lbl-compAccordion">Acordeón</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo cabecera</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-accordion-summaryBackground-picker">
+                  <input class="color-hex" id="ctrl-accordion-summaryBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto cabecera</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-accordion-summaryColor-picker">
+                  <input class="color-hex" id="ctrl-accordion-summaryColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fondo contenido</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-accordion-contentBackground-picker">
+                  <input class="color-hex" id="ctrl-accordion-contentBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto contenido</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-accordion-contentColor-picker">
+                  <input class="color-hex" id="ctrl-accordion-contentColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Borde</span></div>
+                <input class="ctrl-input" id="ctrl-accordion-border" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-accordion-borderRadius" type="text">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑨ LISTA DE GRUPO -->
+          <div class="ctrl-section" id="sec-listgroup">
+            <div class="ctrl-section-header" data-section="listgroup">
+              <span><span class="s-num">⑨</span><span class="s-icon">📝</span><span id="lbl-compListgroup">Lista de grupo</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo ítem par</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-listgroup-evenBackground-picker">
+                  <input class="color-hex" id="ctrl-listgroup-evenBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fondo ítem impar</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-listgroup-oddBackground-picker">
+                  <input class="color-hex" id="ctrl-listgroup-oddBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-listgroup-color-picker">
+                  <input class="color-hex" id="ctrl-listgroup-color" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-listgroup-borderRadius" type="text" placeholder="8px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding ítem</span></div>
+                <input class="ctrl-input" id="ctrl-listgroup-padding" type="text" placeholder="11px 16px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑩ PROGRESO -->
+          <div class="ctrl-section" id="sec-progress">
+            <div class="ctrl-section-header" data-section="progress">
+              <span><span class="s-num">⑩</span><span class="s-icon">📊</span><span id="lbl-compProgress">Barras de progreso</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Color inicio gradiente</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-progress-colorFrom-picker">
+                  <input class="color-hex" id="ctrl-progress-colorFrom" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color fin gradiente</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-progress-colorTo-picker">
+                  <input class="color-hex" id="ctrl-progress-colorTo" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fondo pista</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-progress-trackBackground-picker">
+                  <input class="color-hex" id="ctrl-progress-trackBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Altura (px)</span></div>
+                <input class="ctrl-input" id="ctrl-progress-height" type="text" placeholder="10px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-progress-borderRadius" type="text" placeholder="8px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑪ BARRA DE NAVEGACIÓN -->
+          <div class="ctrl-section" id="sec-navbar">
+            <div class="ctrl-section-header" data-section="navbar">
+              <span><span class="s-num">⑪</span><span class="s-icon">🧭</span><span id="lbl-compNavbar">Barra de navegación</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-navbar-background-picker">
+                  <input class="color-hex" id="ctrl-navbar-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color marca</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-navbar-brandColor-picker">
+                  <input class="color-hex" id="ctrl-navbar-brandColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color enlaces</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-navbar-linkColor-picker">
+                  <input class="color-hex" id="ctrl-navbar-linkColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-navbar-borderRadius" type="text" placeholder="10px">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Padding</span></div>
+                <input class="ctrl-input" id="ctrl-navbar-padding" type="text" placeholder="12px 20px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑫ MIGAS DE PAN -->
+          <div class="ctrl-section" id="sec-breadcrumb">
+            <div class="ctrl-section-header" data-section="breadcrumb">
+              <span><span class="s-num">⑫</span><span class="s-icon">🍞</span><span id="lbl-compBreadcrumb">Migas de pan</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Color enlace</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-breadcrumb-linkColor-picker">
+                  <input class="color-hex" id="ctrl-breadcrumb-linkColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color separador</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-breadcrumb-separatorColor-picker">
+                  <input class="color-hex" id="ctrl-breadcrumb-separatorColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color actual</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-breadcrumb-activeColor-picker">
+                  <input class="color-hex" id="ctrl-breadcrumb-activeColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Separador</span></div>
+                <input class="ctrl-input" id="ctrl-breadcrumb-separator" type="text" placeholder="/">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑬ PAGINACIÓN -->
+          <div class="ctrl-section" id="sec-pagination">
+            <div class="ctrl-section-header" data-section="pagination">
+              <span><span class="s-num">⑬</span><span class="s-icon">📄</span><span id="lbl-compPagination">Paginación</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo activo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-pagination-activeBackground-picker">
+                  <input class="color-hex" id="ctrl-pagination-activeBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto activo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-pagination-activeColor-picker">
+                  <input class="color-hex" id="ctrl-pagination-activeColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fondo inactivo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-pagination-inactiveBackground-picker">
+                  <input class="color-hex" id="ctrl-pagination-inactiveBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto inactivo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-pagination-inactiveColor-picker">
+                  <input class="color-hex" id="ctrl-pagination-inactiveColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Border-radius</span></div>
+                <input class="ctrl-input" id="ctrl-pagination-borderRadius" type="text" placeholder="6px">
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑭ CITA DESTACADA -->
+          <div class="ctrl-section" id="sec-blockquote">
+            <div class="ctrl-section-header" data-section="blockquote">
+              <span><span class="s-num">⑭</span><span class="s-icon">💬</span><span id="lbl-compBlockquote">Cita destacada</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Borde izquierdo</span></div>
+                <input class="ctrl-input" id="ctrl-blockquote-borderLeft" type="text">
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fondo</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-blockquote-background-picker">
+                  <input class="color-hex" id="ctrl-blockquote-background" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-blockquote-color-picker">
+                  <input class="color-hex" id="ctrl-blockquote-color" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑮ TABLA -->
+          <div class="ctrl-section" id="sec-table">
+            <div class="ctrl-section-header" data-section="table">
+              <span><span class="s-num">⑮</span><span class="s-icon">📊</span><span id="lbl-compTable">Tabla</span></span>
+              <span class="chevron">▼</span>
+            </div>
+            <div class="ctrl-section-body">
+              <div class="field">
+                <div class="field-label"><span>Fondo encabezado</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-table-headerBackground-picker">
+                  <input class="color-hex" id="ctrl-table-headerBackground" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Color texto encabezado</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-table-headerColor-picker">
+                  <input class="color-hex" id="ctrl-table-headerColor" type="text">
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-label"><span>Fila alterna</span></div>
+                <div class="color-row">
+                  <input type="color" id="ctrl-table-altRowBackground-picker">
+                  <input class="color-hex" id="ctrl-table-altRowBackground" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /pane-components -->
+      </div><!-- /controls-body -->
+    </aside>
+  </div><!-- /app-main -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+<script src="builder.js"></script>
+</body>
+</html>
