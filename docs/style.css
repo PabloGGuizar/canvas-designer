@@ -236,8 +236,8 @@ code { background: var(--mockup-bg); padding: 4px 8px; border-radius: 4px; color
 .footer { padding: 40px 24px; border-top: 1px solid var(--border); margin-top: 40px; }
 .footer-content { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.9rem; flex-wrap: wrap; gap: 20px;}
 .footer-links { display: flex; gap: 24px; }
-.footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-.footer-links a:hover { color: var(--text); }
+.footer-links a, .footer-content p a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover, .footer-content p a:hover { color: var(--text); }
 
 /* Responsive */
 @media (max-width: 900px) {

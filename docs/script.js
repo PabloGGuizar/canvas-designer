@@ -29,7 +29,7 @@ const i18n = {
     step_4_title: "Carga la Extensión",
     step_4_desc: "Haz clic en el botón <strong>\"Cargar sin empaquetar\"</strong> (Load unpacked) que aparecerá arriba a la izquierda. Selecciona la carpeta que descomprimiste en el paso 1.",
     inst_success: "🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante \"✨\" en la esquina inferior derecha.",
-    footer_copy: "&copy; 2026 Todos los Palíndromos — Desarrollado por <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Código abierto bajo licencia MIT disponible en GitHub.",
+    footer_copy: "&copy; 2026 Canvas Designer — Desarrollado por <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Código abierto bajo licencia MIT disponible en GitHub.",
     footer_src: "Repositorio (Código Fuente)",
     footer_bug: "Reportar un Error"
   },
@@ -63,7 +63,7 @@ const i18n = {
     step_4_title: "Load Extension",
     step_4_desc: "Click the <strong>\"Load unpacked\"</strong> button that will appear on the top left. Select the folder you extracted in step 1.",
     inst_success: "🎉 <strong>Done!</strong> Open any page of your editor in Canvas LMS and you will see a new floating \"✨\" button in the bottom right corner.",
-    footer_copy: "&copy; 2026 Todos los Palíndromos — Developed by <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Open source under MIT license available on GitHub.",
+    footer_copy: "&copy; 2026 Canvas Designer — Developed by <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Open source under MIT license available on GitHub.",
     footer_src: "Repository (Source Code)",
     footer_bug: "Report an Issue"
   }
