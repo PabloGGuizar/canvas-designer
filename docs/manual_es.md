@@ -49,33 +49,33 @@ Aplica para elementos que muestran múltiples ítems repetidos en serie. **El tr
 - **Resultado:** El sistema generará **3 tarjetas independientes** acomodadas en un layout de columnas (Grid). "Lectura Sugerida" será el título de la primera tarjeta, "Tarea 1" el de la segunda, etc.
 
 ### 🧭 Barra de Navegación (Navbar) y 🔗 Migas de pan (Breadcrumb)
-- **Estructura ideal:** Líneas de texto que inician con `+`. Si agregas enlaces (`🔗`) al texto en Canvas, ¡se respetarán!
+- **Estructura ideal:** Simplemente escribe cada opción en una nueva línea. Si agregas enlaces (`🔗`) al texto en Canvas, ¡se respetarán!
 - **Cómo hacerlo en el editor:**
   ```text
-  + Mi Super Curso
-  + Inicio (con hipervínculo a tu portada)
-  + Módulos
-  + Calificaciones
+  Mi Super Curso
+  Inicio (con hipervínculo a tu portada)
+  Módulos
+  Calificaciones
   ```
 - **Resultado:** Crea la barra horizontal. En Navbar, el primer ítem ("Mi Super Curso") se convierte en el "Logo/Marca" que va a la izquierda y el resto serán enlaces a la derecha.
 
 ### ▾ Desplegable (Dropdown)
-- **Estructura ideal:** Igual que la navegación, líneas que inician con `+`.
+- **Estructura ideal:** Igual que la navegación, simplemente escribe cada opción en una línea nueva.
 - **Cómo hacerlo en el editor:**
   ```text
-  + Ver Módulos
-  + Módulo 1
-  + Módulo 2
-  + Módulo 3
+  Ver Módulos
+  Módulo 1
+  Módulo 2
+  Módulo 3
   ```
 - **Resultado:** "Ver Módulos" será el botón principal en el que debes hacer clic, y al presionarlo se desplegará una lista blanca hacia abajo con las opciones "Módulo 1, 2 y 3".
 
 ### ⚡ Grupo de Botones (Button Group) y 📝 Lista de Grupo (List Group)
-- **Estructura ideal:** Puedes usar líneas que inician con `+`, o separar las palabras por comas o saltos de línea normales.
+- **Estructura ideal:** Simplemente escribe cada palabra o frase en una línea nueva.
   ```text
-  + Opción A
-  + Opción B
-  + Opción C
+  Opción A
+  Opción B
+  Opción C
   ```
 - **Resultado:** Crea una botonera unida horizontalmente (Btn Group) o una tabla apilada con filas divisoras (Lista de Grupo).
 
@@ -90,7 +90,7 @@ Estos componentes simplemente envuelven tu texto para darle un estilo visual, si
   ```text
   Importante: La fecha de entrega se ha pospuesto para el próximo lunes.
   ```
-- **Resultado:** Todo lo seleccionado quedará empaquetado dentro de la caja de fondo o la cita con la franja a la izquierda. En el caso de las Alertas, te pedirá elegir el color (Información, Éxito, Advertencia o Error).
+- **Resultado:** Todo lo seleccionado quedará empaquetado dentro de la caja de fondo o la cita con la franja a la izquierda. En el caso de las Citas (Blockquote), al abrir el editor avanzado podrás añadir el "Autor / Fuente" de manera opcional para que aparezca debajo de la cita. En las Alertas, te pedirá elegir el color (Información, Éxito, Advertencia o Error).
 
 ---
 

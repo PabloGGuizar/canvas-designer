@@ -88,18 +88,23 @@
     const html  = sel?.content || '';
     
     currentEditorData = parseSmartSelection(html, text);
-    const { items } = currentEditorData;
+    const { items, isFlat } = currentEditorData;
     currentEditorData.href = CD.extractHrefFromHTML(html) || currentEditorData.links[0]?.href || '#';
 
+    // Group items for accordion, cardgrid, and dropdown if flat
+    if (['accordion', 'cardgrid', 'dropdown'].includes(type) && isFlat) {
+      currentEditorData.items = [{ label: currentEditorData.title, subBody: currentEditorData.body, href: '#', imageSrc: '' }];
+    }
+
     // Pre-process items for list-like components
-    if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown'].includes(type)) {
+    if (['listgroup', 'navbar', 'breadcrumb', 'btngroup'].includes(type)) {
       if (items.length === 1 && items[0].subBody) {
          const sub = getSubLines(items[0].subBody);
          if (sub.length > 0) {
-            currentEditorData.items = sub.map((s, idx) => {
-              if (idx === 0 && (type === 'navbar' || type === 'dropdown')) return items[0];
-              return { label: s, href: '#', subBody: '' };
-            });
+            currentEditorData.items = [
+              { label: items[0].label, href: items[0].href || '#', subBody: '' },
+              ...sub.map(s => ({ label: s, href: '#', subBody: '' }))
+            ];
          }
       }
     }
@@ -174,9 +179,15 @@
     }
 
     if (['hero', 'banner', 'card', 'alert', 'blockquote'].includes(type)) {
-      h += addField('f-title', 'Título / Texto', d.title || '');
-      if (type !== 'banner' && type !== 'blockquote') {
-         h += addField('f-body', 'Cuerpo / Descripción', d.body || '', true);
+      if (type === 'blockquote') {
+         let fText = currentEditorData.rawHtml || (d.title + (d.body ? '<br>' + d.body : ''));
+         h += addField('f-body', 'Cita / Texto', fText, true);
+         h += addField('f-title', 'Autor / Fuente (Opcional)', '');
+      } else {
+         h += addField('f-title', 'Título / Texto', d.title || '');
+         if (type !== 'banner') {
+            h += addField('f-body', 'Cuerpo / Descripción', d.body || '', true);
+         }
       }
       if (type === 'card') {
          h += addField('f-image', 'URL de Imagen (Opcional)', '');
@@ -188,8 +199,8 @@
       if (type === 'accordion') {
          h += addField('f-title', 'Título General (opcional)', d.title || '');
       }
-      if (type === 'navbar' || type === 'dropdown') {
-         h += addField('f-title', type === 'navbar' ? 'Marca / Título' : 'Título del Menú', d.items[0]?.label || '');
+      if (type === 'navbar') {
+         h += addField('f-title', 'Marca / Título', d.items[0]?.label || '');
       }
 
       h += `<div class="cd-field"><label class="cd-label">Elementos</label><div id="cd-item-list" class="cd-item-list"></div></div>
@@ -211,10 +222,18 @@
         const isColor = /^#[0-9a-fA-F]{3,8}$/.test(sVal.trim()) || sKey.toLowerCase().includes('color') || sKey.toLowerCase().includes('background');
         
         if (isColor) {
+           let safeHex = sVal.trim();
+           if (!/^#[0-9a-fA-F]{6}$/.test(safeHex)) {
+             if (/^#[0-9a-fA-F]{3}$/.test(safeHex)) {
+               safeHex = '#' + safeHex[1]+safeHex[1]+safeHex[2]+safeHex[2]+safeHex[3]+safeHex[3];
+             } else {
+               safeHex = '#000000';
+             }
+           }
            h += `<div class="cd-field" style="margin-bottom:0;">
              <label class="cd-label" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${sKey}">${sKey}</label>
              <div class="cd-color-row">
-               <input type="color" class="cd-color-swatch cd-style-override-swatch" data-key="${sKey}" value="${sVal}">
+               <input type="color" class="cd-color-swatch cd-style-override-swatch" data-key="${sKey}" value="${safeHex}">
                <input type="text" class="cd-color-hex cd-style-override" data-key="${sKey}" value="${sVal}">
              </div>
            </div>`;
@@ -235,14 +254,14 @@
       const renderItems = () => {
         let itemsHtml = '';
         let loopItems = d.items;
-        if (type === 'navbar' || type === 'dropdown') loopItems = d.items.slice(1);
+        if (type === 'navbar') loopItems = d.items.slice(1);
         if (loopItems.length === 0) loopItems = [{label: 'Opción 1', subBody: ''}];
         
         loopItems.forEach((it, i) => {
           itemsHtml += `<div class="cd-item-editor" data-idx="${i}">
             <button class="cd-item-remove" title="Eliminar">✖</button>
             <input type="text" class="cd-input cd-item-label" placeholder="Título" value="${it.label || ''}" style="margin-bottom:6px">
-            ${['accordion', 'cardgrid'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo">${it.subBody || ''}</div>` : ''}
+            ${['accordion', 'cardgrid', 'dropdown'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo / Opciones">${it.subBody || ''}</div>` : ''}
             ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="" style="margin-top:6px">` : ''}
             ${type === 'breadcrumb' ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
           </div>`;
@@ -252,7 +271,7 @@
         listEl.querySelectorAll('.cd-item-remove').forEach((btn, idx) => {
           btn.addEventListener('click', () => {
              loopItems.splice(idx, 1);
-             if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
+             if (type === 'navbar') d.items = [d.items[0], ...loopItems];
              else d.items = loopItems;
              renderItems();
              updateLivePreview();
@@ -262,9 +281,9 @@
       renderItems();
 
       document.getElementById('cd-add-item').addEventListener('click', () => {
-         let loopItems = (type === 'navbar' || type === 'dropdown') ? d.items.slice(1) : d.items;
+         let loopItems = (type === 'navbar') ? d.items.slice(1) : d.items;
          loopItems.push({label: 'Nuevo Ítem', subBody: ''});
-         if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
+         if (type === 'navbar') d.items = [d.items[0], ...loopItems];
          else d.items = loopItems;
          renderItems();
          updateLivePreview();
@@ -380,7 +399,7 @@
         break;
       }
       case 'progress': finalHtml = CD.makeProgress(gLabel || 'Progreso', parseInt(gPct) || 70, lib); break;
-      case 'blockquote': finalHtml = CD.makeBlockquote(gTitle || 'Texto destacado para la cita', lib); break;
+      case 'blockquote': finalHtml = CD.makeBlockquote(gBody || 'Texto destacado para la cita', gTitle || '', lib); break;
       case 'accordion': {
         if (gItems.length > 1 || (gItems.length === 1 && gTitle)) {
           finalHtml = gItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
@@ -395,7 +414,13 @@
       case 'breadcrumb': finalHtml = CD.makeBreadcrumb(gItems.map(i=>({label:i.label, href:i.href})), lib); break;
       case 'pagination': finalHtml = CD.makePagination(2, 5, lib); break;
       case 'btngroup': finalHtml = CD.makeButtonGroup(gItems.length ? gItems.map(i=>i.label) : ['A', 'B'], lib); break;
-      case 'dropdown': finalHtml = CD.makeDropdown(gTitle || 'Menú', gItems.map(i=>i.label), lib); break;
+      case 'dropdown': {
+        finalHtml = gItems.map(i => {
+          const opts = getSubLines(i.subBody);
+          return CD.makeDropdown(i.label || 'Menú', opts.length ? opts : ['Opción 1'], lib);
+        }).join('&nbsp;');
+        break;
+      }
       case 'cardgrid': finalHtml = CD.makeCardGrid(gItems.map(i=>({title: i.label, body: i.subBody, imageSrc: i.imageSrc})), lib); break;
     }
 
@@ -408,7 +433,7 @@
     if (!finalHtml) return;
 
     try {
-      if (type === 'accordion' || type === 'dropdown') {
+      if (currentEditorType === 'accordion' || currentEditorType === 'dropdown') {
         finalHtml = finalHtml.replace(/<details/g, '<details class="cd-temp-insertion"');
       }
       await CD.bridgeCall('REPLACE_SELECTION', { html: finalHtml });
@@ -432,15 +457,23 @@
     const html  = sel?.content || '';
     
     const parsed = parseSmartSelection(html, text);
-    const { title, body, items } = parsed;
+    const { title, body, items, isFlat } = parsed;
     const href = CD.extractHrefFromHTML(html) || parsed.links[0]?.href || '#';
 
     let result = '';
 
     const getInstantItems = () => {
-      if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown'].includes(type) && items.length === 1 && items[0].subBody) {
+      if (['accordion', 'cardgrid', 'dropdown'].includes(type) && isFlat) {
+         return [{ label: title, subBody: body, href: '#', imageSrc: '' }];
+      }
+      if (['listgroup', 'navbar', 'breadcrumb', 'btngroup'].includes(type) && items.length === 1 && items[0].subBody) {
          const sub = getSubLines(items[0].subBody);
-         if (sub.length > 0) return sub.map(s => ({label: s, href: '#', subBody: ''}));
+         if (sub.length > 0) {
+            return [
+               { label: items[0].label, href: items[0].href || '#', subBody: '' },
+               ...sub.map(s => ({label: s, href: '#', subBody: ''}))
+            ];
+         }
       }
       return items;
     };
@@ -461,7 +494,7 @@
         result = CD.makeProgress(label, pct, lib);
         break;
       }
-      case 'blockquote': result = CD.makeBlockquote(html || text || 'Cita', lib); break;
+      case 'blockquote': result = CD.makeBlockquote(html || text || 'Cita', '', lib); break;
       case 'accordion': {
         if (instItems.length > 1 || (instItems.length === 1 && title && instItems[0].label !== title)) {
           result = instItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
@@ -481,9 +514,10 @@
       case 'pagination': result = CD.makePagination(2, 5, lib); break;
       case 'btngroup': result = CD.makeButtonGroup(instItems.map(i=>i.label), lib); break;
       case 'dropdown': {
-        const dTitle = instItems[0]?.label || 'Menú';
-        const dLinks = instItems.slice(1).map(i=>i.label);
-        result = CD.makeDropdown(dTitle, dLinks.length ? dLinks : ['Opción 1'], lib);
+        result = instItems.map(i => {
+           const opts = getSubLines(i.subBody);
+           return CD.makeDropdown(i.label || 'Menú', opts.length ? opts : ['Opción 1'], lib);
+        }).join('&nbsp;');
         break;
       }
       case 'cardgrid': result = CD.makeCardGrid(instItems.map(i=>({title: i.label, body: i.subBody, imageSrc: ''})), lib); break;
@@ -577,7 +611,9 @@
         title: pmItems[0].label, 
         body: pmItems[0].subBody || '', 
         items: pmItems, 
-        links 
+        links,
+        isFlat: false,
+        rawHtml: html
       };
     }
 
@@ -604,7 +640,7 @@
         });
         title = items[0].label;
         bodyHtml = items[0].subBody;
-        return { title, body: bodyHtml, items, links };
+        return { title, body: bodyHtml, items, links, isFlat: false, rawHtml: html };
       }
     }
 
@@ -651,7 +687,7 @@
       items = [{ label: title, href: links[0]?.href || '#', subBody: bodyHtml || title }];
     }
 
-    return { title, body: bodyHtml, items, links };
+    return { title, body: bodyHtml, items, links, isFlat: true, rawHtml: html };
   }
 
   // ── Panel HTML ─────────────────────────────────────────────────────────────

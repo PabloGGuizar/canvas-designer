@@ -104,12 +104,12 @@ function makeHero(title, subtitle, lib) {
   if (h.backgroundImage) {
     bgStyle = `background: url('${esc(h.backgroundImage)}') center/cover no-repeat, ${h.background};`;
   }
-  return `<div style="${css({'text-align':h.textAlign,'border-radius':h.borderRadius,'min-height':h.minHeight,display:'flex','flex-direction':'column','justify-content':'center','align-items':h.textAlign==='center'?'center':'flex-start','margin-bottom':'20px', padding: h.padding})};${bgStyle}"><div style="${css({background: h.backgroundImage ? 'rgba(255,255,255,0.85)' : 'transparent', padding: h.backgroundImage ? '20px' : '0', 'border-radius': h.borderRadius})}"><h2 style="${css({color:h.color,'font-size':h.titleSize,'font-family':ty.headingFont,'font-weight':'700',margin:'0 0 10px','line-height':'1.2'})}">${esc(title)}</h2>${subtitle?`<p style="${css({color:h.subtitleColor,'font-size':h.subtitleSize,'font-family':ty.bodyFont,margin:'0'})}">${esc(subtitle)}</p>`:''}</div></div>`;
+  return `<div style="${css({'text-align':h.textAlign,'border-radius':h.borderRadius,'min-height':h.minHeight,display:'flex','flex-direction':'column','justify-content':'center','align-items':h.textAlign==='center'?'center':'flex-start','margin-bottom':'20px', padding: h.padding})};${bgStyle}"><div style="${css({background: h.backgroundImage ? 'rgba(255,255,255,0.85)' : 'transparent', padding: h.backgroundImage ? '20px' : '0', 'border-radius': h.borderRadius})}"><h2 style="${css({color:h.color,'font-size':h.titleSize,'font-family':ty.headingFont,'font-weight':'700',margin:'0 0 10px','line-height':'1.2'})}">${title}</h2>${subtitle?`<div style="${css({color:h.subtitleColor,'font-size':h.subtitleSize,'font-family':ty.bodyFont,margin:'0'})}">${subtitle}</div>`:''}</div></div>`;
 }
 
 function makeBanner(text, lib) {
   const b = lib.banner, ty = lib.typography;
-  return `<div style="${css({background:b.background,color:b.color,'border-left':b.borderLeft,padding:b.padding,'border-radius':b.borderRadius,'font-size':b.fontSize,'font-weight':b.fontWeight,'font-family':ty.bodyFont,margin:'16px 0'})}"><p style="margin:0">${esc(text)}</p></div>`;
+  return `<div style="${css({background:b.background,color:b.color,'border-left':b.borderLeft,padding:b.padding,'border-radius':b.borderRadius,'font-size':b.fontSize,'font-weight':b.fontWeight,'font-family':ty.bodyFont,margin:'16px 0'})}"><div style="margin:0">${text}</div></div>`;
 }
 
 function makeCard(title, body, lib, imageSrc) {
@@ -120,7 +120,7 @@ function makeCard(title, body, lib, imageSrc) {
     let radiusTop = c.borderRadius === '0px' ? '0px' : `calc(${c.borderRadius} - 1px) calc(${c.borderRadius} - 1px) 0 0`;
     imgHtml = `<img src="${esc(imageSrc)}" alt="" style="width:100%;height:auto;display:block;border-radius:${radiusTop};border-bottom:${c.border}">`;
   }
-  return `<div style="${css({background:c.background,border:c.border,'border-radius':c.borderRadius})}">${imgHtml}<div style="${css({padding:c.padding})}"><h3 style="${css({color:c.titleColor,'font-size':c.titleSize,'font-family':ty.headingFont,'font-weight':'600',margin:'0 0 8px'})}">${esc(title)}</h3><p style="${css({color:c.textColor,'font-family':ty.bodyFont,margin:'0','line-height':ty.lineHeight})}">${esc(body)}</p></div></div>`;
+  return `<div style="${css({background:c.background,border:c.border,'border-radius':c.borderRadius})}">${imgHtml}<div style="${css({padding:c.padding})}"><h3 style="${css({color:c.titleColor,'font-size':c.titleSize,'font-family':ty.headingFont,'font-weight':'600',margin:'0 0 8px'})}">${title}</h3><div style="${css({color:c.textColor,'font-family':ty.bodyFont,margin:'0','line-height':ty.lineHeight})}">${body}</div></div></div>`;
 }
 
 function makeButton(label, href, lib) {
@@ -131,12 +131,16 @@ function makeButton(label, href, lib) {
 
 function makeAccordion(title, content, lib) {
   const a = lib.accordion, ty = lib.typography;
-  return `<details style="${css({border:a.border,'border-radius':a.borderRadius,margin:'8px 0',overflow:'hidden'})}"><summary style="${css({background:a.summaryBackground,color:a.summaryColor,padding:a.summaryPadding,'font-weight':a.fontWeight,'font-family':ty.headingFont,cursor:'pointer',display:'block'})}">${esc(title)}</summary><div style="${css({background:a.contentBackground,color:a.contentColor,padding:a.contentPadding,'font-family':ty.bodyFont,'line-height':ty.lineHeight})}">${content || '<p>Contenido del acordeón</p>'}</div></details>`;
+  return `<details style="${css({border:a.border,'border-radius':a.borderRadius,margin:'8px 0',overflow:'hidden'})}"><summary style="${css({background:a.summaryBackground,color:a.summaryColor,padding:a.summaryPadding,'font-weight':a.fontWeight,'font-family':ty.headingFont,cursor:'pointer',display:'block'})}">${title}</summary><div style="${css({background:a.contentBackground,color:a.contentColor,padding:a.contentPadding,'font-family':ty.bodyFont,'line-height':ty.lineHeight})}">${content || '<p>Contenido del acordeón</p>'}</div></details>`;
 }
 
-function makeBlockquote(text, lib) {
-  const bq = lib.blockquote, ty = lib.typography;
-  return `<blockquote style="${css({'border-left':bq.borderLeft,background:bq.background,color:bq.color,padding:bq.padding,'font-style':bq.fontStyle,'border-radius':bq.borderRadius,margin:'16px 0','font-family':ty.bodyFont})}"><p style="margin:0">${esc(text)}</p></blockquote>`;
+function makeBlockquote(text, author, lib) {
+  const bq = lib.blockquote, ty = lib.typography, pl = lib.palette || {textLight: '#6b7280'};
+  let html = `<div style="margin:0">${text}</div>`;
+  if (author) {
+    html += `<cite style="display:block;font-style:normal;font-weight:600;margin-top:8px;font-size:0.85em;color:${pl.textLight}">— ${esc(author)}</cite>`;
+  }
+  return `<blockquote style="${css({'border-left':bq.borderLeft,background:bq.background,color:bq.color,padding:bq.padding,'font-style':bq.fontStyle,'border-radius':bq.borderRadius,margin:'16px 0','font-family':ty.bodyFont})}">${html}</blockquote>`;
 }
 
 // ── NEW COMPONENTS ────────────────────────────────────────────────────────────
@@ -150,7 +154,7 @@ function makeAlert(text, variant, lib) {
     danger:  { bg: al.dangerBackground, color: al.dangerColor, border: al.dangerBorderColor, icon: '🚫' },
   };
   const v = variants[variant] || variants.info;
-  return `<div style="${css({background:v.bg,color:v.color,border:`1px solid ${v.border}`,'border-left':`4px solid ${v.border}`,'border-radius':al.borderRadius,padding:'14px 16px',margin:'12px 0','font-family':ty.bodyFont,'font-size':'0.95em','line-height':ty.lineHeight})}"><strong>${v.icon} </strong>${esc(text)}</div>`;
+  return `<div style="${css({display:'flex', gap:'8px', background:v.bg,color:v.color,border:`1px solid ${v.border}`,'border-left':`4px solid ${v.border}`,'border-radius':al.borderRadius,padding:'14px 16px',margin:'12px 0','font-family':ty.bodyFont,'font-size':'0.95em','line-height':ty.lineHeight})}"><strong style="flex-shrink:0;">${v.icon} </strong><div style="flex:1;">${text}</div></div>`;
 }
 
 function makeBadge(text, lib) {
@@ -259,7 +263,7 @@ function makeCardGrid(cards, lib) {
       let radiusTop = c.borderRadius === '0px' ? '0px' : `calc(${c.borderRadius} - 1px) calc(${c.borderRadius} - 1px) 0 0`;
       imgHtml = `<img src="${esc(card.imageSrc)}" alt="" style="width:100%;height:auto;display:block;border-radius:${radiusTop};border-bottom:${c.border}">`;
     }
-    return `<div style="${css({background:c.background,border:c.border,'border-radius':c.borderRadius,flex:'1','min-width':'160px'})}">${imgHtml}<div style="${css({padding:c.padding})}"><h3 style="${css({color:c.titleColor,'font-size':c.titleSize,'font-family':ty.headingFont,'font-weight':'600',margin:'0 0 8px'})}">${esc(card.title)}</h3><p style="${css({color:c.textColor,'font-family':ty.bodyFont,margin:'0','font-size':'0.9em','line-height':ty.lineHeight})}">${esc(card.body)}</p></div></div>`;
+    return `<div style="${css({background:c.background,border:c.border,'border-radius':c.borderRadius,flex:'1','min-width':'160px'})}">${imgHtml}<div style="${css({padding:c.padding})}"><h3 style="${css({color:c.titleColor,'font-size':c.titleSize,'font-family':ty.headingFont,'font-weight':'600',margin:'0 0 8px'})}">${card.title}</h3><div style="${css({color:c.textColor,'font-family':ty.bodyFont,margin:'0','font-size':'0.9em','line-height':ty.lineHeight})}">${card.body}</div></div></div>`;
   }).join('');
   return `<div style="${gridStyle}">${items}</div>`;
 }
