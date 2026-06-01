@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const manualLink = document.getElementById('manual-link');
     if (manualLink) {
-      manualLink.href = lang === 'es' ? 'manual_es.md' : 'manual_en.md';
+      manualLink.href = lang === 'es' ? 'manual_es.pdf' : 'manual_en.pdf';
     }
 
     localStorage.setItem('lang', lang);
