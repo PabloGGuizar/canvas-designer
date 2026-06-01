@@ -97,7 +97,7 @@
     }
 
     // Pre-process items for list-like components
-    if (['listgroup', 'navbar', 'breadcrumb', 'btngroup'].includes(type)) {
+    if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'pagination'].includes(type)) {
       if (items.length === 1 && items[0].subBody) {
          const sub = getSubLines(items[0].subBody);
          if (sub.length > 0) {
@@ -195,7 +195,7 @@
     } else if (['button', 'badge'].includes(type)) {
       h += addField('f-title', 'Texto', d.title || 'Botón');
       if (type === 'button') h += addField('f-href', 'Enlace URL', d.href || '#');
-    } else if (['accordion', 'listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown', 'cardgrid'].includes(type)) {
+    } else if (['accordion', 'listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown', 'cardgrid', 'pagination'].includes(type)) {
       if (type === 'accordion') {
          h += addField('f-title', 'Título General (opcional)', d.title || '');
       }
@@ -206,9 +206,8 @@
       h += `<div class="cd-field"><label class="cd-label">Elementos</label><div id="cd-item-list" class="cd-item-list"></div></div>
             <button class="cd-btn cd-btn-secondary" id="cd-add-item">+ Añadir Ítem</button>`;
     } else if (type === 'progress') {
-       // handled by optsConfig
-    } else if (type === 'pagination') {
-       h += `<div class="cd-hint">La paginación se insertará con estilo por defecto y 5 páginas.</div>`;
+       h += addField('f-title', 'Etiqueta', d.title || 'Progreso');
+       h += addField('f-pct', 'Porcentaje (0-100)', '70');
     }
 
     const styleKey = type === 'cardgrid' ? 'card' : (type === 'btngroup' ? 'button' : type);
@@ -263,7 +262,7 @@
             <input type="text" class="cd-input cd-item-label" placeholder="Título" value="${it.label || ''}" style="margin-bottom:6px">
             ${['accordion', 'cardgrid', 'dropdown'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo / Opciones">${it.subBody || ''}</div>` : ''}
             ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="" style="margin-top:6px">` : ''}
-            ${type === 'breadcrumb' ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
+            ${['breadcrumb', 'pagination'].includes(type) ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
           </div>`;
         });
         listEl.innerHTML = itemsHtml;
@@ -412,7 +411,16 @@
       case 'listgroup': finalHtml = CD.makeListGroup(gItems.length ? gItems.map(i=>i.label) : [gTitle], lib); break;
       case 'navbar': finalHtml = CD.makeNavBar(gTitle || 'Marca', gItems.map(i=>i.label), lib); break;
       case 'breadcrumb': finalHtml = CD.makeBreadcrumb(gItems.map(i=>({label:i.label, href:i.href})), lib); break;
-      case 'pagination': finalHtml = CD.makePagination(2, 5, lib); break;
+      case 'pagination': {
+        const pItems = gItems.map(i => {
+           let lbl = (i.label || '').trim();
+           let active = false;
+           if (lbl.endsWith('*')) { active = true; lbl = lbl.slice(0, -1).trim(); }
+           return { label: lbl, href: i.href, active };
+        });
+        finalHtml = CD.makePagination(pItems, lib);
+        break;
+      }
       case 'btngroup': finalHtml = CD.makeButtonGroup(gItems.length ? gItems.map(i=>i.label) : ['A', 'B'], lib); break;
       case 'dropdown': {
         finalHtml = gItems.map(i => {
@@ -466,7 +474,7 @@
       if (['accordion', 'cardgrid', 'dropdown'].includes(type) && isFlat) {
          return [{ label: title, subBody: body, href: '#', imageSrc: '' }];
       }
-      if (['listgroup', 'navbar', 'breadcrumb', 'btngroup'].includes(type) && items.length === 1 && items[0].subBody) {
+      if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'pagination'].includes(type) && items.length === 1 && items[0].subBody) {
          const sub = getSubLines(items[0].subBody);
          if (sub.length > 0) {
             return [
@@ -499,7 +507,7 @@
         if (instItems.length > 1 || (instItems.length === 1 && title && instItems[0].label !== title)) {
           result = instItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
         } else {
-          result = CD.makeAccordion(title || 'Título', body || '<p>Contenido</p>', lib);
+          result = CD.makeAccordion(instItems[0]?.label || title || 'Título', instItems[0]?.subBody || body || '<p>Contenido</p>', lib);
         }
         break;
       }
@@ -511,7 +519,20 @@
         break;
       }
       case 'breadcrumb': result = CD.makeBreadcrumb(instItems, lib); break;
-      case 'pagination': result = CD.makePagination(2, 5, lib); break;
+      case 'pagination': {
+        if (!text.trim() || (instItems.length === 1 && instItems[0].label === 'Texto de ejemplo')) {
+           result = CD.makePagination(2, 5, lib);
+        } else {
+           const pItems = instItems.map(i => {
+              let lbl = (i.label || '').trim();
+              let active = false;
+              if (lbl.endsWith('*')) { active = true; lbl = lbl.slice(0, -1).trim(); }
+              return { label: lbl, href: i.href, active };
+           });
+           result = CD.makePagination(pItems, lib);
+        }
+        break;
+      }
       case 'btngroup': result = CD.makeButtonGroup(instItems.map(i=>i.label), lib); break;
       case 'dropdown': {
         result = instItems.map(i => {

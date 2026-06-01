@@ -226,20 +226,38 @@ function makeNavBar(brand, links, lib) {
   return `<nav style="${navStyle}"><a href="#" style="${brandStyle}">${esc(brand)}</a>${linkItems}</nav>`;
 }
 
-function makePagination(current, total, lib) {
+function makePagination(items, lib) {
   const pg = lib.pagination, ty = lib.typography;
   const navStyle = css({display:'flex','justify-content':'center','align-items':'center',gap:'5px',margin:'16px 0','font-family':ty.bodyFont});
   const base = css({'border-radius':pg.borderRadius,padding:'7px 13px','font-size':'0.9em','text-decoration':'none','font-weight':'500',display:'inline-block'});
   const inactive = `${base};background:${pg.inactiveBackground};color:${pg.inactiveColor};border:1px solid #e2e8f0`;
   const active   = `${base};background:${pg.activeBackground};color:${pg.activeColor};border:1px solid ${pg.activeBackground}`;
-  const disabled = `${base};background:#f8fafc;color:#9ca3af;border:1px solid #e2e8f0`;
+  const disabled = `${base};background:#f8fafc;color:#9ca3af;border:1px solid #e2e8f0;pointer-events:none`;
+
+  if (typeof items === 'number') {
+    const current = items;
+    const total = arguments[1];
+    items = [];
+    for (let i = 1; i <= Math.min(total, 5); i++) {
+       items.push({ label: String(i), href: '#', active: i === current });
+    }
+  }
 
   const pages = [];
-  pages.push(`<a href="#" style="${disabled}">‹</a>`);
-  for (let i = 1; i <= Math.min(total, 5); i++) {
-    pages.push(`<a href="#" style="${i === current ? active : inactive}">${i}</a>`);
-  }
-  pages.push(`<a href="#" style="${inactive}">›</a>`);
+  let activeIdx = items.findIndex(it => it.active);
+  if (activeIdx === -1) activeIdx = 0;
+  
+  const prevItem = items[activeIdx - 1];
+  const nextItem = items[activeIdx + 1];
+
+  pages.push(`<a href="${prevItem ? esc(prevItem.href) : '#'}" style="${prevItem ? inactive : disabled}">‹</a>`);
+  
+  items.forEach(it => {
+    pages.push(`<a href="${esc(it.href||'#')}" style="${it.active ? active : inactive}">${esc(it.label)}</a>`);
+  });
+  
+  pages.push(`<a href="${nextItem ? esc(nextItem.href) : '#'}" style="${nextItem ? inactive : disabled}">›</a>`);
+  
   return `<nav style="${navStyle}">${pages.join('')}</nav>`;
 }
 
