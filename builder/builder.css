@@ -258,3 +258,33 @@ input[type="range"] {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 10px; }
+
+/* ── Light Theme ─────────────────────────────────────── */
+body.light-theme {
+  --bg:        #f8fafc;
+  --surface:   #ffffff;
+  --surface2:  #f1f5f9;
+  --surface3:  #e2e8f0;
+  --border:    rgba(0,0,0,0.1);
+  --text:      #0f172a;
+  --text-dim:  #475569;
+  --text-xs:   #64748b;
+  --primary:   #4f46e5;
+  --primary2:  #6d28d9;
+}
+
+body.light-theme .app-header {
+  background: #ffffff;
+}
+
+body.light-theme .preview-area {
+  background: #cbd5e1;
+}
+
+body.light-theme .ctrl-section-body {
+  background: #f8fafc;
+}
+
+body.light-theme .color-swatch {
+  border-color: rgba(0,0,0,0.1);
+}

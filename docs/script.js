@@ -2,6 +2,7 @@ const i18n = {
   es: {
     nav_features: "Características",
     nav_install: "Instalación",
+    nav_manual: "Manual de Uso",
     hero_badge: "🚀 Versión Beta 0.1.0",
     hero_title: "Crea diseños increíbles en <span class='highlight'>Canvas LMS</span>",
     hero_subtitle: "Una extensión para profesores y diseñadores instruccionales. Añade tarjetas, botones, acordeones y más a tu contenido en segundos sin saber programar.",
@@ -36,6 +37,7 @@ const i18n = {
   en: {
     nav_features: "Features",
     nav_install: "Installation",
+    nav_manual: "User Manual",
     hero_badge: "🚀 Beta Version 0.1.0",
     hero_title: "Create amazing designs in <span class='highlight'>Canvas LMS</span>",
     hero_subtitle: "An extension for teachers and instructional designers. Add cards, buttons, accordions, and more to your content in seconds without coding.",
@@ -147,6 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
         el.innerHTML = i18n[lang][key];
       }
     });
+
+    const manualLink = document.getElementById('manual-link');
+    if (manualLink) {
+      manualLink.href = lang === 'es' ? 'manual_es.md' : 'manual_en.md';
+    }
+
     localStorage.setItem('lang', lang);
   };
 

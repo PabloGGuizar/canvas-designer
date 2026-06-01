@@ -542,7 +542,9 @@ function bindControls() {
     };
 
     const initVal = lib[section]?.[key] || '#ffffff';
-    try { picker.value = initVal; } catch(e){}
+    if (/^#[0-9a-fA-F]{6}$/i.test(initVal.trim())) {
+      picker.value = initVal.trim();
+    }
     hexInput.value = initVal;
 
     picker.addEventListener('input', () => {
@@ -576,10 +578,15 @@ function renderPaletteTab() {
       </div>
     </div>`).join('');
 
-  keys.forEach(([k]) => {
+    keys.forEach(([k]) => {
     const picker = document.getElementById(`pal-${k}-picker`);
     const hex    = document.getElementById(`pal-${k}`);
     const setV   = v => { lib.palette[k] = v; renderPreview(); };
+    
+    if (/^#[0-9a-fA-F]{6}$/i.test(lib.palette[k])) {
+       picker.value = lib.palette[k];
+    }
+    
     picker.addEventListener('input', ()=>{ hex.value = picker.value; setV(picker.value); });
     hex.addEventListener('input', ()=>{
       if (/^#[0-9a-f]{6}$/i.test(hex.value.trim())){ picker.value=hex.value.trim(); setV(hex.value.trim()); }
@@ -668,11 +675,38 @@ async function init() {
   });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
-    lib = JSON.parse(JSON.stringify(DEFAULT));
-    applyLibToUI();
-    toast(t('resetDone'), 'ok');
+    if (confirm('¿Restablecer al estilo por defecto? Perderás los cambios no guardados.')) {
+      lib = JSON.parse(JSON.stringify(DEFAULT));
+      document.getElementById('ctrl-template-select').value = 'default';
+      currentTemplateId = null;
+      renderPreview();
+      bindControls();
+    }
   });
 
+  // --- Theme Toggle ---
+  const btnTheme = document.getElementById('btn-theme');
+  let currentTheme = localStorage.getItem('builderTheme') || 'dark';
+  
+  const applyTheme = (theme) => {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+      btnTheme.textContent = '🌙';
+    } else {
+      document.body.classList.remove('light-theme');
+      btnTheme.textContent = '☀️';
+    }
+    localStorage.setItem('builderTheme', theme);
+  };
+  
+  applyTheme(currentTheme);
+  
+  btnTheme.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  });
+
+  // --- Language Toggle ---
   document.getElementById('btn-lang').addEventListener('click', () => {
     lang = lang === 'es' ? 'en' : 'es';
     chrome.runtime.sendMessage({ type:'SAVE_SETTINGS', settings:{...settings, lang} });

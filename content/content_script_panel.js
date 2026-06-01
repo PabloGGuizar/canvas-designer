@@ -129,6 +129,7 @@
       <button class="cd-back-btn" id="cd-editor-back" title="Regresar">←</button>
       <span id="cd-editor-title">Editar ${type.charAt(0).toUpperCase() + type.slice(1)}</span>
     </div>
+    <div id="cd-live-preview" class="cd-preview-box"></div>
     <div class="cd-editor-form" id="cd-form-container"></div>
     <div class="cd-btn-group">
       <button class="cd-btn cd-btn-secondary" id="cd-editor-cancel" style="margin-bottom:0">Cancelar</button>
@@ -207,10 +208,22 @@
         <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">`;
       for (const [sKey, sVal] of Object.entries(compStyles)) {
         if (typeof sVal !== 'string') continue;
-        h += `<div class="cd-field" style="margin-bottom:0;">
-          <label class="cd-label" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${sKey}">${sKey}</label>
-          <input type="text" class="cd-input cd-style-override" data-key="${sKey}" value="${sVal}" style="padding:6px; font-size:11px;">
-        </div>`;
+        const isColor = /^#[0-9a-fA-F]{3,8}$/.test(sVal.trim()) || sKey.toLowerCase().includes('color') || sKey.toLowerCase().includes('background');
+        
+        if (isColor) {
+           h += `<div class="cd-field" style="margin-bottom:0;">
+             <label class="cd-label" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${sKey}">${sKey}</label>
+             <div class="cd-color-row">
+               <input type="color" class="cd-color-swatch cd-style-override-swatch" data-key="${sKey}" value="${sVal}">
+               <input type="text" class="cd-color-hex cd-style-override" data-key="${sKey}" value="${sVal}">
+             </div>
+           </div>`;
+        } else {
+           h += `<div class="cd-field" style="margin-bottom:0;">
+             <label class="cd-label" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${sKey}">${sKey}</label>
+             <input type="text" class="cd-input cd-style-override" data-key="${sKey}" value="${sVal}" style="padding:6px; font-size:11px;">
+           </div>`;
+        }
       }
       h += `</div></details>`;
     }
@@ -242,6 +255,7 @@
              if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
              else d.items = loopItems;
              renderItems();
+             updateLivePreview();
           });
         });
       };
@@ -253,11 +267,52 @@
          if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
          else d.items = loopItems;
          renderItems();
+         updateLivePreview();
       });
     }
+
+    // Color Pickers Sync
+    document.querySelectorAll('.cd-style-override-swatch').forEach(swatch => {
+      const hexInput = document.querySelector(`.cd-style-override[data-key="${swatch.dataset.key}"]`);
+      if (!hexInput) return;
+      
+      const setColor = (val) => {
+         updateLivePreview();
+      };
+      
+      const initVal = hexInput.value || '#ffffff';
+      if (/^#[0-9a-fA-F]{6}$/i.test(initVal.trim())) {
+        swatch.value = initVal.trim();
+      }
+      
+      swatch.addEventListener('input', () => {
+        hexInput.value = swatch.value;
+        setColor(swatch.value);
+      });
+      hexInput.addEventListener('input', () => {
+        const v = hexInput.value.trim();
+        if (/^#[0-9a-fA-F]{6}$/i.test(v)) { swatch.value = v; setColor(v); }
+      });
+    });
+
+    // Attach preview updates to inputs
+    pane.addEventListener('input', (e) => {
+       if (e.target.matches('input, select, textarea, [contenteditable]')) {
+          updateLivePreview();
+       }
+    });
+
+    updateLivePreview();
   }
 
-  async function insertFromEditor() {
+  function updateLivePreview() {
+    const previewBox = document.getElementById('cd-live-preview');
+    if (!previewBox) return;
+    const finalHtml = generateComponentHtml();
+    previewBox.innerHTML = finalHtml || '<span style="color:var(--cd-text-dim);font-size:13px;font-style:italic">Vista previa...</span>';
+  }
+
+  function generateComponentHtml() {
     const type = currentEditorType;
     let lib = CD.getLib();
 
@@ -344,6 +399,12 @@
       case 'cardgrid': finalHtml = CD.makeCardGrid(gItems.map(i=>({title: i.label, body: i.subBody, imageSrc: i.imageSrc})), lib); break;
     }
 
+    return finalHtml;
+  }
+
+  async function insertFromEditor() {
+    let finalHtml = generateComponentHtml();
+    
     if (!finalHtml) return;
 
     try {
@@ -609,10 +670,13 @@
        </div>`;
 
     return `
-<div id="canvas-designer-panel">
+<div id="canvas-designer-panel" class="${s.theme === 'light' ? 'cd-light-theme' : ''}">
   <div id="cd-header">
     <div class="cd-logo">🎨 Canvas Designer</div>
-    <button id="cd-lang-btn">${s.lang === 'es' ? 'EN' : 'ES'}</button>
+    <div>
+      <button id="cd-theme-btn" title="Cambiar Tema" style="background:none;border:none;cursor:pointer;font-size:16px;margin-right:8px;color:inherit;">${s.theme === 'light' ? '🌙' : '☀️'}</button>
+      <button id="cd-lang-btn">${s.lang === 'es' ? 'EN' : 'ES'}</button>
+    </div>
   </div>
   <div id="cd-tabs">
     <button class="cd-tab active" data-tab="transform">${CD.t('tabTransform')}</button>
@@ -703,6 +767,13 @@
     document.getElementById('cd-lang-btn')?.addEventListener('click', () => {
       const s = CD.getSettings();
       s.lang = s.lang === 'es' ? 'en' : 'es';
+      chrome.runtime.sendMessage({ type: 'SAVE_SETTINGS', settings: s });
+      reRender();
+    });
+
+    document.getElementById('cd-theme-btn')?.addEventListener('click', () => {
+      const s = CD.getSettings();
+      s.theme = s.theme === 'light' ? 'dark' : 'light';
       chrome.runtime.sendMessage({ type: 'SAVE_SETTINGS', settings: s });
       reRender();
     });
