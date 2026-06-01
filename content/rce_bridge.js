@@ -52,22 +52,26 @@
         let finalHtml = msg.html;
         editor.selection.setContent(finalHtml);
         
-        // Find the injected element if it has our temporary ID and force it open
-        const tempEl = editor.dom.get('cd-temp-insertion');
-        if (tempEl) {
-          tempEl.open = true;
-          tempEl.setAttribute('open', 'open');
-          
-          // Also try to place the cursor inside to mimic a real user selection
-          try {
-             const innerDiv = tempEl.querySelector('div');
-             if (innerDiv) {
-               editor.selection.select(innerDiv);
-               editor.selection.collapse(true);
-             }
-          } catch(e) {}
-          
-          tempEl.removeAttribute('id');
+        // Find the injected elements if they have our temporary class and force them open
+        const tempEls = editor.dom.select('.cd-temp-insertion');
+        if (tempEls && tempEls.length > 0) {
+          tempEls.forEach((el, index) => {
+            el.open = true;
+            el.setAttribute('open', 'open');
+            
+            // Also try to place the cursor inside to mimic a real user selection
+            if (index === 0) {
+              try {
+                 const innerDiv = el.querySelector('div');
+                 if (innerDiv) {
+                   editor.selection.select(innerDiv);
+                   editor.selection.collapse(true);
+                 }
+              } catch(e) {}
+            }
+            
+            editor.dom.removeClass(el, 'cd-temp-insertion');
+          });
         }
         
         editor.undoManager.add();

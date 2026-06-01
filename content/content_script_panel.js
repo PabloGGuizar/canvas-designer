@@ -50,68 +50,319 @@
   }
   CD.setStatus = setStatus;
 
-  // ── Options panel ─────────────────────────────────────────────────────────
-  let pendingType = null;
+  // ── Editor panel ─────────────────────────────────────────────────────────
+  let currentEditorType = null;
+  let currentEditorData = null;
 
-  function showOptions(type) {
-    pendingType = type;
-    const opts = COMPONENT_OPTIONS[type];
-    const panel = document.getElementById('cd-options-panel');
-    if (!panel || !opts) return;
+  const stripHtml = (h) => {
+    if (!h) return '';
+    const div = document.createElement('div');
+    div.innerHTML = h;
+    return div.textContent.trim();
+  };
 
-    if (opts.isProgress) {
-      panel.innerHTML = `
-        <div class="cd-opts-label">${opts.label}</div>
-        <div class="cd-opts-progress">
-          <input type="number" id="cd-pct-input" class="cd-input" min="0" max="100" value="70" placeholder="70">
-          <span class="cd-pct-sym">%</span>
-        </div>
-        <input type="text" id="cd-pct-label" class="cd-input" placeholder="Etiqueta (ej: Avance del curso)" style="margin-top:6px">
-        <button class="cd-btn cd-btn-primary" id="cd-apply-variant" style="margin-top:8px">Insertar barra</button>
-      `;
-      // Auto-fill from selection
-      CD.bridgeCall('GET_SELECTION').then(sel => {
-        const pctMatch = (sel?.text || '').match(/(\d+)\s*%/);
-        if (pctMatch) {
-          const input = document.getElementById('cd-pct-input');
-          if (input) input.value = parseInt(pctMatch[1]);
-        }
-      }).catch(()=>{});
-      document.getElementById('cd-apply-variant')?.addEventListener('click', () => {
-        const pct = parseInt(document.getElementById('cd-pct-input')?.value || '70');
-        const label = document.getElementById('cd-pct-label')?.value?.trim() || 'Progreso';
-        applyComponent('progress', null, { pct, label });
-        hideOptions();
-      });
-    } else {
-      const btns = opts.variants.map(v => `
-        <button class="cd-variant-btn" data-variant="${v.id}" title="${v.label}">
-          <span>${v.icon}</span><span>${v.label}</span>
-        </button>`).join('');
-      panel.innerHTML = `<div class="cd-opts-label">${opts.label}</div><div class="cd-variant-grid">${btns}</div>`;
-      panel.querySelectorAll('.cd-variant-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          applyComponent(pendingType, btn.dataset.variant, {});
-          hideOptions();
-        });
-      });
+  const getSubLines = (html) => {
+    if (!html) return [];
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    const blocks = Array.from(div.querySelectorAll('p, div, li'));
+    if (blocks.length > 0) {
+      return blocks.map(b => b.textContent.trim()).filter(Boolean);
     }
+    return html.split(/<br\s*\/?>/i).map(s => {
+       div.innerHTML = s;
+       return div.textContent.trim();
+    }).filter(Boolean);
+  };
 
-    panel.classList.add('visible');
-  }
-
-  function hideOptions() {
-    const panel = document.getElementById('cd-options-panel');
-    if (panel) panel.classList.remove('visible');
-    pendingType = null;
-  }
-
-  // ── Apply component ───────────────────────────────────────────────────────
-  async function applyComponent(type, variant, extra) {
-    // Ensure we have the absolutely latest styles from storage before generating HTML
+  async function showEditor(type) {
     const res = await new Promise(resolve => chrome.runtime.sendMessage({ type: 'GET_STYLE_LIBRARY' }, resolve));
     if (res?.library) CD.setLib(res.library);
+
+    currentEditorType = type;
     
+    let sel;
+    try { sel = await CD.bridgeCall('GET_SELECTION'); } catch (e) { return setStatus(CD.t('noEditor'), 'error'); }
+
+    const text  = sel?.text?.trim() || '';
+    const html  = sel?.content || '';
+    
+    currentEditorData = parseSmartSelection(html, text);
+    const { items } = currentEditorData;
+    currentEditorData.href = CD.extractHrefFromHTML(html) || currentEditorData.links[0]?.href || '#';
+
+    // Pre-process items for list-like components
+    if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown'].includes(type)) {
+      if (items.length === 1 && items[0].subBody) {
+         const sub = getSubLines(items[0].subBody);
+         if (sub.length > 0) {
+            currentEditorData.items = sub.map((s, idx) => {
+              if (idx === 0 && (type === 'navbar' || type === 'dropdown')) return items[0];
+              return { label: s, href: '#', subBody: '' };
+            });
+         }
+      }
+    }
+
+    renderEditorForm();
+    
+    document.querySelectorAll('.cd-tab-pane').forEach(p => p.classList.remove('active'));
+    const pane = document.getElementById('cd-pane-editor');
+    if (pane) pane.classList.add('active');
+  }
+
+  function hideEditor() {
+    currentEditorType = null;
+    currentEditorData = null;
+    document.querySelectorAll('.cd-tab-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('cd-pane-transform').classList.add('active');
+  }
+
+  function renderEditorForm() {
+    const pane = document.getElementById('cd-pane-editor');
+    if (!pane) return;
+
+    const d = currentEditorData;
+    const type = currentEditorType;
+
+    let formHtml = `<div id="cd-editor-header">
+      <button class="cd-back-btn" id="cd-editor-back" title="Regresar">←</button>
+      <span id="cd-editor-title">Editar ${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+    </div>
+    <div class="cd-editor-form" id="cd-form-container"></div>
+    <div class="cd-btn-group">
+      <button class="cd-btn cd-btn-secondary" id="cd-editor-cancel" style="margin-bottom:0">Cancelar</button>
+      <button class="cd-btn cd-btn-primary" id="cd-editor-insert" style="margin-bottom:0">Insertar</button>
+    </div>`;
+    
+    pane.innerHTML = formHtml;
+    document.getElementById('cd-editor-back').addEventListener('click', hideEditor);
+    document.getElementById('cd-editor-cancel').addEventListener('click', hideEditor);
+    document.getElementById('cd-editor-insert').addEventListener('click', insertFromEditor);
+
+    const container = document.getElementById('cd-form-container');
+
+    const addField = (id, label, val, isHtml = false) => {
+      return `<div class="cd-field">
+        <label class="cd-label">${label}</label>
+        ${isHtml 
+          ? `<div id="${id}" class="cd-textarea cd-editable" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);">${val}</div>`
+          : `<input type="text" id="${id}" class="cd-input" value="${val}">`
+        }
+      </div>`;
+    };
+
+    const addSelect = (id, label, opts) => {
+      return `<div class="cd-field">
+        <label class="cd-label">${label}</label>
+        <select id="${id}" class="cd-select">
+          ${opts.map(o => `<option value="${o.id}">${o.label}</option>`).join('')}
+        </select>
+      </div>`;
+    };
+
+    let h = '';
+    const optsConfig = COMPONENT_OPTIONS[type];
+    if (optsConfig && optsConfig.variants) {
+      h += addSelect('f-variant', optsConfig.label, optsConfig.variants);
+    }
+    if (optsConfig && optsConfig.isProgress) {
+      const pctMatch = (d.title || '').match(/(\d+)\s*%/);
+      h += addField('f-pct', 'Porcentaje (0-100)', pctMatch ? pctMatch[1] : '70');
+      h += addField('f-label', 'Etiqueta', d.title.replace(/\d+\s*%/, '').trim() || 'Progreso');
+    }
+
+    if (['hero', 'banner', 'card', 'alert', 'blockquote'].includes(type)) {
+      h += addField('f-title', 'Título / Texto', d.title || '');
+      if (type !== 'banner' && type !== 'blockquote') {
+         h += addField('f-body', 'Cuerpo / Descripción', d.body || '', true);
+      }
+      if (type === 'card') {
+         h += addField('f-image', 'URL de Imagen (Opcional)', '');
+      }
+    } else if (['button', 'badge'].includes(type)) {
+      h += addField('f-title', 'Texto', d.title || 'Botón');
+      if (type === 'button') h += addField('f-href', 'Enlace URL', d.href || '#');
+    } else if (['accordion', 'listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown', 'cardgrid'].includes(type)) {
+      if (type === 'accordion') {
+         h += addField('f-title', 'Título General (opcional)', d.title || '');
+      }
+      if (type === 'navbar' || type === 'dropdown') {
+         h += addField('f-title', type === 'navbar' ? 'Marca / Título' : 'Título del Menú', d.items[0]?.label || '');
+      }
+
+      h += `<div class="cd-field"><label class="cd-label">Elementos</label><div id="cd-item-list" class="cd-item-list"></div></div>
+            <button class="cd-btn cd-btn-secondary" id="cd-add-item">+ Añadir Ítem</button>`;
+    } else if (type === 'progress') {
+       // handled by optsConfig
+    } else if (type === 'pagination') {
+       h += `<div class="cd-hint">La paginación se insertará con estilo por defecto y 5 páginas.</div>`;
+    }
+
+    const styleKey = type === 'cardgrid' ? 'card' : (type === 'btngroup' ? 'button' : type);
+    const compStyles = CD.getLib()[styleKey] || {};
+    if (Object.keys(compStyles).length > 0) {
+      h += `<details class="cd-custom-styles" style="margin-top:16px; border:1px solid var(--cd-border); border-radius:8px; background:rgba(0,0,0,0.1);">
+        <summary style="padding:10px; font-weight:600; cursor:pointer; font-size:12px; outline:none;">⚙️ Estilos de este elemento</summary>
+        <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">`;
+      for (const [sKey, sVal] of Object.entries(compStyles)) {
+        if (typeof sVal !== 'string') continue;
+        h += `<div class="cd-field" style="margin-bottom:0;">
+          <label class="cd-label" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${sKey}">${sKey}</label>
+          <input type="text" class="cd-input cd-style-override" data-key="${sKey}" value="${sVal}" style="padding:6px; font-size:11px;">
+        </div>`;
+      }
+      h += `</div></details>`;
+    }
+
+    container.innerHTML = h;
+
+    const listEl = document.getElementById('cd-item-list');
+    if (listEl) {
+      const renderItems = () => {
+        let itemsHtml = '';
+        let loopItems = d.items;
+        if (type === 'navbar' || type === 'dropdown') loopItems = d.items.slice(1);
+        if (loopItems.length === 0) loopItems = [{label: 'Opción 1', subBody: ''}];
+        
+        loopItems.forEach((it, i) => {
+          itemsHtml += `<div class="cd-item-editor" data-idx="${i}">
+            <button class="cd-item-remove" title="Eliminar">✖</button>
+            <input type="text" class="cd-input cd-item-label" placeholder="Título" value="${it.label || ''}" style="margin-bottom:6px">
+            ${['accordion', 'cardgrid'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo">${it.subBody || ''}</div>` : ''}
+            ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="" style="margin-top:6px">` : ''}
+            ${type === 'breadcrumb' ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
+          </div>`;
+        });
+        listEl.innerHTML = itemsHtml;
+        
+        listEl.querySelectorAll('.cd-item-remove').forEach((btn, idx) => {
+          btn.addEventListener('click', () => {
+             loopItems.splice(idx, 1);
+             if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
+             else d.items = loopItems;
+             renderItems();
+          });
+        });
+      };
+      renderItems();
+
+      document.getElementById('cd-add-item').addEventListener('click', () => {
+         let loopItems = (type === 'navbar' || type === 'dropdown') ? d.items.slice(1) : d.items;
+         loopItems.push({label: 'Nuevo Ítem', subBody: ''});
+         if (type === 'navbar' || type === 'dropdown') d.items = [d.items[0], ...loopItems];
+         else d.items = loopItems;
+         renderItems();
+      });
+    }
+  }
+
+  async function insertFromEditor() {
+    const type = currentEditorType;
+    let lib = CD.getLib();
+
+    const styleKey = type === 'cardgrid' ? 'card' : (type === 'btngroup' ? 'button' : type);
+    const overrides = Array.from(document.querySelectorAll('.cd-style-override'));
+    if (overrides.length > 0) {
+      lib = JSON.parse(JSON.stringify(lib));
+      if (!lib[styleKey]) lib[styleKey] = {};
+      overrides.forEach(input => {
+        lib[styleKey][input.dataset.key] = input.value;
+      });
+    }
+    const vEl = document.getElementById('f-variant');
+    const variant = vEl ? vEl.value : null;
+
+    let finalHtml = '';
+    
+    const gTitle = document.getElementById('f-title')?.value || '';
+    const bodyEl = document.getElementById('f-body');
+    const gBody  = bodyEl ? (bodyEl.tagName === 'DIV' ? bodyEl.innerHTML : bodyEl.value) : '';
+    const gImage = document.getElementById('f-image')?.value || '';
+    const gHref  = document.getElementById('f-href')?.value || '#';
+    const gPct   = document.getElementById('f-pct')?.value || 70;
+    const gLabel = document.getElementById('f-label')?.value || '';
+
+    let gItems = [];
+    const listEl = document.getElementById('cd-item-list');
+    if (listEl) {
+       listEl.querySelectorAll('.cd-item-editor').forEach(el => {
+         const bodyEl = el.querySelector('.cd-item-body');
+         gItems.push({
+           label: el.querySelector('.cd-item-label')?.value || '',
+           subBody: bodyEl ? (bodyEl.tagName === 'DIV' ? bodyEl.innerHTML : bodyEl.value) : '',
+           href: el.querySelector('.cd-item-href')?.value || '#',
+           imageSrc: el.querySelector('.cd-item-image')?.value || ''
+         });
+       });
+    }
+
+    switch (type) {
+      case 'hero': finalHtml = CD.makeHero(gTitle || 'Título del Héroe', gBody || 'Subtítulo', lib); break;
+      case 'banner': finalHtml = CD.makeBanner(gTitle || 'Texto', lib); break;
+      case 'card': finalHtml = CD.makeCard(gTitle || 'Título', gBody || 'Contenido', lib, gImage); break;
+      case 'button': {
+        const b = lib.button, ty = lib.typography;
+        const link = gHref;
+        const display = gTitle || 'Botón';
+        if (variant === 'outlined') {
+          const s = `background:transparent;color:${b.background};border-radius:${b.borderRadius};padding:${b.padding};font-size:${b.fontSize};font-weight:${b.fontWeight};text-decoration:none;display:inline-block;font-family:${ty.bodyFont};border:2px solid ${b.background}`;
+          finalHtml = `<a href="${link}" style="${s}">${display}</a>`;
+        } else if (variant === 'pill') {
+          const s = `background:${b.background};color:${b.color};border-radius:50px;padding:${b.padding};font-size:${b.fontSize};font-weight:${b.fontWeight};text-decoration:none;display:inline-block;font-family:${ty.bodyFont}`;
+          finalHtml = `<a href="${link}" style="${s}">${display}</a>`;
+        } else {
+          finalHtml = CD.makeButton(display, link, lib);
+        }
+        break;
+      }
+      case 'alert': finalHtml = CD.makeAlert(gTitle || gBody, variant || 'info', lib); break;
+      case 'badge': {
+        const pl = lib.palette, ty = lib.typography;
+        const colors = { primary: pl.primary, secondary: pl.secondary, accent: pl.accent, success: '#10b981' };
+        const bg = colors[variant] || pl.primary;
+        finalHtml = `<span style="background:${bg};color:#fff;border-radius:20px;padding:3px 10px;font-size:0.78em;font-weight:600;display:inline-block;font-family:${ty.bodyFont};line-height:1.5">${gTitle || 'Insignia'}</span>`;
+        break;
+      }
+      case 'progress': finalHtml = CD.makeProgress(gLabel || 'Progreso', parseInt(gPct) || 70, lib); break;
+      case 'blockquote': finalHtml = CD.makeBlockquote(gTitle || 'Texto destacado para la cita', lib); break;
+      case 'accordion': {
+        if (gItems.length > 1 || (gItems.length === 1 && gTitle)) {
+          finalHtml = gItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
+        } else {
+          const i = gItems[0];
+          finalHtml = CD.makeAccordion(i?.label || gTitle || 'Título del acordeón', i?.subBody || gBody || '<p>Contenido</p>', lib); 
+        }
+        break;
+      }
+      case 'listgroup': finalHtml = CD.makeListGroup(gItems.length ? gItems.map(i=>i.label) : [gTitle], lib); break;
+      case 'navbar': finalHtml = CD.makeNavBar(gTitle || 'Marca', gItems.map(i=>i.label), lib); break;
+      case 'breadcrumb': finalHtml = CD.makeBreadcrumb(gItems.map(i=>({label:i.label, href:i.href})), lib); break;
+      case 'pagination': finalHtml = CD.makePagination(2, 5, lib); break;
+      case 'btngroup': finalHtml = CD.makeButtonGroup(gItems.length ? gItems.map(i=>i.label) : ['A', 'B'], lib); break;
+      case 'dropdown': finalHtml = CD.makeDropdown(gTitle || 'Menú', gItems.map(i=>i.label), lib); break;
+      case 'cardgrid': finalHtml = CD.makeCardGrid(gItems.map(i=>({title: i.label, body: i.subBody, imageSrc: i.imageSrc})), lib); break;
+    }
+
+    if (!finalHtml) return;
+
+    try {
+      if (type === 'accordion' || type === 'dropdown') {
+        finalHtml = finalHtml.replace(/<details/g, '<details class="cd-temp-insertion"');
+      }
+      await CD.bridgeCall('REPLACE_SELECTION', { html: finalHtml });
+      hideEditor();
+      setStatus('✅ ' + CD.t('done'), 'ok');
+    } catch (e) {
+      setStatus(CD.t('aiError'), 'error');
+    }
+  }
+
+  // ── Instant Insertion (Magic Wand) ──────────────────────────────────────
+  async function applyInstantComponent(type) {
+    const res = await new Promise(resolve => chrome.runtime.sendMessage({ type: 'GET_STYLE_LIBRARY' }, resolve));
+    if (res?.library) CD.setLib(res.library);
+
     const lib = CD.getLib();
     let sel;
     try { sel = await CD.bridgeCall('GET_SELECTION'); } catch (e) { return setStatus(CD.t('noEditor'), 'error'); }
@@ -119,117 +370,79 @@
     const text  = sel?.text?.trim() || '';
     const html  = sel?.content || '';
     
-    // Parse smart structure
     const parsed = parseSmartSelection(html, text);
-    const { title, body, items, links } = parsed;
-    const href  = CD.extractHrefFromHTML(html) || links[0]?.href;
+    const { title, body, items } = parsed;
+    const href = CD.extractHrefFromHTML(html) || parsed.links[0]?.href || '#';
 
     let result = '';
 
+    const getInstantItems = () => {
+      if (['listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown'].includes(type) && items.length === 1 && items[0].subBody) {
+         const sub = getSubLines(items[0].subBody);
+         if (sub.length > 0) return sub.map(s => ({label: s, href: '#', subBody: ''}));
+      }
+      return items;
+    };
+
+    const instItems = getInstantItems();
+
     switch (type) {
-      case 'hero': {
-        const heroBody = body ? body.replace(/<[^>]+>/g, '').trim() : '';
-        result = CD.makeHero(title || 'Título del Héroe', heroBody || 'Subtítulo descriptivo para tu héroe', lib); 
-        break;
-      }
-      case 'banner':
-        result = CD.makeBanner(text || 'Texto destacado para tu banner', lib); break;
-      case 'card': {
-        const cardBody = body ? body.replace(/<[^>]+>/g, '').trim() : '';
-        result = CD.makeCard(title || 'Título de la Tarjeta', cardBody || 'Este es el contenido principal de la tarjeta. Puedes añadir más información aquí.', lib); 
-        break;
-      }
-      case 'button': {
-        const b = lib.button, ty = lib.typography;
-        const link = href || '#';
-        const display = title || 'Botón';
-        if (variant === 'outlined') {
-          const s = `background:transparent;color:${b.background};border-radius:${b.borderRadius};padding:${b.padding};font-size:${b.fontSize};font-weight:${b.fontWeight};text-decoration:none;display:inline-block;font-family:${ty.bodyFont};border:2px solid ${b.background}`;
-          result = `<a href="${link}" style="${s}">${display}</a>`;
-        } else if (variant === 'pill') {
-          const s = `background:${b.background};color:${b.color};border-radius:50px;padding:${b.padding};font-size:${b.fontSize};font-weight:${b.fontWeight};text-decoration:none;display:inline-block;font-family:${ty.bodyFont}`;
-          result = `<a href="${link}" style="${s}">${display}</a>`;
-        } else {
-          result = CD.makeButton(display, link, lib);
-        }
-        break;
-      }
-      case 'alert':
-        result = CD.makeAlert(html || text || 'Texto de alerta', variant || 'info', lib); break;
-      case 'badge': {
-        const pl = lib.palette, ty = lib.typography;
-        const colors = { primary: pl.primary, secondary: pl.secondary, accent: pl.accent, success: '#10b981' };
-        const bg = colors[variant] || pl.primary;
-        result = `<span style="background:${bg};color:#fff;border-radius:20px;padding:3px 10px;font-size:0.78em;font-weight:600;display:inline-block;font-family:${ty.bodyFont};line-height:1.5">${title || 'Insignia'}</span>`;
-        break;
-      }
+      case 'hero': result = CD.makeHero(title || 'Título', body || 'Subtítulo', lib); break;
+      case 'banner': result = CD.makeBanner(text || 'Texto', lib); break;
+      case 'card': result = CD.makeCard(title || 'Título', body || 'Contenido', lib, ''); break;
+      case 'button': result = CD.makeButton(title || 'Botón', href, lib); break;
+      case 'alert': result = CD.makeAlert(html || text || 'Alerta', 'info', lib); break;
+      case 'badge': result = CD.makeBadge(title || 'Insignia', lib); break;
       case 'progress': {
-        const pctMatch = text.match(/(\\d+)\\s*%/);
-        const pct = extra.pct ?? (pctMatch ? parseInt(pctMatch[1]) : 70);
-        const label = extra.label || title || 'Progreso';
+        const pctMatch = text.match(/(\d+)\s*%/);
+        const pct = pctMatch ? parseInt(pctMatch[1]) : 70;
+        const label = title.replace(/\d+\s*%/, '').trim() || 'Progreso';
         result = CD.makeProgress(label, pct, lib);
         break;
       }
-      case 'blockquote':
-        result = CD.makeBlockquote(html || text || 'Texto destacado para la cita', lib); break;
+      case 'blockquote': result = CD.makeBlockquote(html || text || 'Cita', lib); break;
       case 'accordion': {
-        const accBody = (body && body.replace(/<[^>]+>/g, '').trim()) ? body : '<p>Contenido descriptivo del acordeón. Haz clic en Editar para cambiar este texto.</p>';
-        result = CD.makeAccordion(title || 'Título del acordeón', accBody, lib); 
+        if (instItems.length > 1 || (instItems.length === 1 && title && instItems[0].label !== title)) {
+          result = instItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
+        } else {
+          result = CD.makeAccordion(title || 'Título', body || '<p>Contenido</p>', lib);
+        }
         break;
       }
-      case 'listgroup': {
-        const labels = items.map(i => i.label);
-        result = CD.makeListGroup(labels.length ? labels : [title], lib);
-        break;
-      }
+      case 'listgroup': result = CD.makeListGroup(instItems.map(i=>i.label), lib); break;
       case 'navbar': {
-        const brand = items[0]?.label || 'Mi Curso';
-        const navItems = items.length > 1 ? items.slice(1).map(i => i.label) : ['Inicio', 'Módulos'];
-        result = CD.makeNavBar(brand, navItems, lib);
+        const brand = instItems[0]?.label || 'Marca';
+        const navLinks = instItems.slice(1).map(i=>i.label);
+        result = CD.makeNavBar(brand, navLinks.length ? navLinks : ['Inicio'], lib); 
         break;
       }
-      case 'breadcrumb': {
-        const crumbs = items.length ? items.map(i => ({ label: i.label, href: i.href })) : [{label: title, href: '#'}];
-        result = CD.makeBreadcrumb(crumbs, lib);
-        break;
-      }
-      case 'pagination':
-        result = CD.makePagination(2, 5, lib); break;
-      case 'btngroup': {
-        const labels = items.map(i => i.label).slice(0, 4);
-        result = CD.makeButtonGroup(labels.length ? labels : ['Opción A', 'Opción B'], lib);
-        break;
-      }
+      case 'breadcrumb': result = CD.makeBreadcrumb(instItems, lib); break;
+      case 'pagination': result = CD.makePagination(2, 5, lib); break;
+      case 'btngroup': result = CD.makeButtonGroup(instItems.map(i=>i.label), lib); break;
       case 'dropdown': {
-        const dropTitle = items[0]?.label || 'Menú';
-        const dropItems = items.length > 1 ? items.slice(1).map(i => i.label) : ['Opción 1', 'Opción 2'];
-        result = CD.makeDropdown(dropTitle, dropItems, lib);
+        const dTitle = instItems[0]?.label || 'Menú';
+        const dLinks = instItems.slice(1).map(i=>i.label);
+        result = CD.makeDropdown(dTitle, dLinks.length ? dLinks : ['Opción 1'], lib);
         break;
       }
-      case 'cardgrid':
-        const cards = items.map(i => ({ title: i.label, body: i.subBody ? i.subBody.replace(/<[^>]+>/g, '') : 'Descripción' }));
-        // Ensure at least two cards if not enough items
-        if (cards.length === 1) cards.push({ title: 'Tarjeta 2', body: 'Contenido adicional' });
-        result = CD.makeCardGrid(cards, lib);
-        break;
+      case 'cardgrid': result = CD.makeCardGrid(instItems.map(i=>({title: i.label, body: i.subBody, imageSrc: ''})), lib); break;
     }
 
     if (!result) return;
-    try {
-      // If we are inserting an accordion or dropdown without previous selection,
-      // we attach a temporary ID so the bridge can find it and force it open in TinyMCE.
-      if (!html && (type === 'accordion' || type === 'dropdown')) {
-        result = result.replace('<details', '<details id="cd-temp-insertion"');
-      }
 
+    try {
+      if (type === 'accordion' || type === 'dropdown') {
+        result = result.replace(/<details/g, '<details class="cd-temp-insertion"');
+      }
       await CD.bridgeCall('REPLACE_SELECTION', { html: result });
-      
       if (!html && ['dropdown', 'card', 'hero', 'accordion'].includes(type)) {
         setStatus('💡 Tip: Selecciona texto antes de añadir este componente', 'ok');
       } else {
         setStatus('✅ ' + CD.t('done'), 'ok');
       }
-    } catch (e) { setStatus(CD.t('aiError'), 'error'); }
+    } catch (e) {
+      setStatus(CD.t('aiError'), 'error');
+    }
   }
 
   // ── Smart Selection Parsing ───────────────────────────────────────────────
@@ -237,6 +450,10 @@
     if (!html) {
       const t = fallbackText.trim() || 'Texto de ejemplo';
       return { title: t, body: '', items: [{label: t, href: '#', subBody: ''}], links: [] };
+    }
+
+    if (!/<[a-z][\s\S]*>/i.test(html)) {
+      html = html.split('\n').map(l => `<p>${l}</p>`).join('');
     }
 
     const parser = new DOMParser();
@@ -252,6 +469,56 @@
     root.querySelectorAll('a').forEach(a => {
       links.push({ label: a.textContent.trim(), href: a.getAttribute('href') || '#' });
     });
+
+    // Strategy 0: Plus/Minus Syntax (+ Título \n - Cuerpo)
+    let hasPlusMinus = false;
+    let pmItems = [];
+    let pmCurrent = null;
+    
+    root.childNodes.forEach(node => {
+      let text = node.textContent.trim();
+      if (!text) return;
+
+      if (text.startsWith('+')) {
+        hasPlusMinus = true;
+        if (pmCurrent) pmItems.push(pmCurrent);
+        
+        let label = text.replace(/^\s*\+\s*/, '').trim();
+        let href = '#';
+        if (node.nodeType === 1) { 
+           const a = node.querySelector('a');
+           if (a) href = a.getAttribute('href') || '#';
+        }
+        pmCurrent = { label, href, subBody: '' };
+      } else if (text.startsWith('-') && pmCurrent) {
+        let htmlContent = '';
+        if (node.nodeType === 1) {
+          let clone = node.cloneNode(true);
+          const walk = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT, null, false);
+          let firstText = walk.nextNode();
+          if (firstText) {
+             firstText.nodeValue = firstText.nodeValue.replace(/^\s*-?\s*/, '');
+          }
+          htmlContent = clone.innerHTML.trim();
+        } else {
+          htmlContent = text.replace(/^\s*-?\s*/, '');
+        }
+        pmCurrent.subBody += (pmCurrent.subBody ? '<br>' : '') + htmlContent;
+      } else if (pmCurrent) {
+         let htmlContent = node.nodeType === 1 ? node.innerHTML.trim() : text;
+         pmCurrent.subBody += (pmCurrent.subBody ? '<br>' : '') + htmlContent;
+      }
+    });
+    if (pmCurrent) pmItems.push(pmCurrent);
+
+    if (hasPlusMinus && pmItems.length > 0) {
+      return { 
+        title: pmItems[0].label, 
+        body: pmItems[0].subBody || '', 
+        items: pmItems, 
+        links 
+      };
+    }
 
     // Strategy 1: Nested Lists
     const topLists = Array.from(root.children).filter(el => el.tagName === 'UL' || el.tagName === 'OL');
@@ -281,7 +548,7 @@
     }
 
     // Strategy 2: Headings and Paragraphs
-    const heading = root.querySelector('h1, h2, h3, h4, h5, h6, strong, b');
+    let heading = root.querySelector('h1, h2, h3, h4, h5, h6');
     if (heading) {
       title = heading.textContent.trim();
       const clone = root.cloneNode(true);
@@ -291,14 +558,14 @@
       if (!bodyHtml.replace(/<[^>]+>/g, '').trim()) bodyHtml = ''; 
     } else {
       // Strategy 3: Just paragraphs or lines
-      const p = root.querySelector('p');
-      if (p) {
-        title = p.textContent.trim();
+      const firstChild = root.firstElementChild;
+      if (firstChild) {
+        title = firstChild.textContent.trim();
         const clone = root.cloneNode(true);
-        clone.querySelector('p').remove();
+        if (clone.firstElementChild) clone.firstElementChild.remove();
         bodyHtml = clone.innerHTML.trim();
       } else {
-        const lines = fallbackText.split('\\n').map(s=>s.trim()).filter(Boolean);
+        const lines = fallbackText.split('\n').map(s=>s.trim()).filter(Boolean);
         title = lines[0] || 'Texto de ejemplo';
         bodyHtml = lines.slice(1).map(l => `<p>${l}</p>`).join('');
       }
@@ -311,11 +578,11 @@
         const text = b.textContent.trim();
         if (text) {
           const a = b.querySelector('a');
-          items.push({ label: text, href: a ? (a.getAttribute('href') || '#') : '#', subBody: text });
+          items.push({ label: text, href: a ? (a.getAttribute('href') || '#') : '#', subBody: b.innerHTML.trim() });
         }
       });
     } else {
-      const lines = fallbackText.split('\\n').map(s=>s.trim()).filter(Boolean);
+      const lines = fallbackText.split('\n').map(s=>s.trim()).filter(Boolean);
       items = lines.map(l => ({ label: l, href: '#', subBody: l }));
     }
 
@@ -332,11 +599,14 @@
     const lib = CD.getLib();
 
     const tBtn = (type, icon, key, hasOpts) =>
-      `<button class="cd-transform-btn${hasOpts?' has-opts':''}" data-type="${type}" title="${CD.t(key)}">
-        <span class="cd-icon">${icon}</span>
-        <span>${CD.t(key)}</span>
-        ${hasOpts ? '<span class="cd-opts-arrow">▾</span>' : ''}
-      </button>`;
+      `<div style="position:relative; display:flex;">
+         <button class="cd-transform-btn${hasOpts?' has-opts':''}" data-type="${type}" title="${CD.t(key)}" style="flex:1;">
+           <span class="cd-icon">${icon}</span>
+           <span>${CD.t(key)}</span>
+           ${hasOpts ? '<span class="cd-opts-arrow">▾</span>' : ''}
+         </button>
+         <button class="cd-instant-btn" data-type="${type}" title="Inserción Rápida" style="position:absolute; top:4px; right:4px; background:none; border:none; cursor:pointer; font-size:12px; opacity:0.6; padding:4px;">🪄</button>
+       </div>`;
 
     return `
 <div id="canvas-designer-panel">
@@ -387,9 +657,11 @@
         ${tBtn('btngroup',    '⚡', 'toBtnGroup',   false)}
       </div>
 
-      <!-- Options panel (contextual) -->
-      <div id="cd-options-panel"></div>
     </div>
+
+    <!-- EDITOR TAB -->
+    <div class="cd-tab-pane" id="cd-pane-editor"></div>
+
 
     <!-- SETTINGS TAB -->
     <div class="cd-tab-pane" id="cd-pane-settings">
@@ -447,17 +719,15 @@
     document.querySelectorAll('.cd-transform-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const type = btn.dataset.type;
-        // Close options if clicking same type again
-        const opts = document.getElementById('cd-options-panel');
-        if (opts?.classList.contains('visible') && pendingType === type) {
-          hideOptions(); return;
-        }
-        if (INSTANT.includes(type)) {
-          hideOptions();
-          applyComponent(type, null, {});
-        } else {
-          showOptions(type);
-        }
+        showEditor(type);
+      });
+    });
+
+    document.querySelectorAll('.cd-instant-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const type = btn.dataset.type;
+        applyInstantComponent(type);
       });
     });
 

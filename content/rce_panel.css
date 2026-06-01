@@ -377,3 +377,65 @@
   flex-shrink: 0;
 }
 
+/* ── Editor View ───────────────────────────────────── */
+#cd-editor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cd-border);
+}
+.cd-back-btn {
+  background: none;
+  border: none;
+  color: var(--cd-text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color var(--cd-transition);
+}
+.cd-back-btn:hover {
+  color: var(--cd-text);
+}
+#cd-editor-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+.cd-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cd-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+.cd-item-editor {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--cd-border);
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+}
+.cd-item-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--cd-danger);
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.6;
+}
+.cd-item-remove:hover {
+  opacity: 1;
+}
+.cd-btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
