@@ -18,6 +18,9 @@ Aplica para componentes que necesitan una cabecera fuerte y un texto de apoyo.
   Este es el texto del párrafo que acompaña al título. Puedes usar negritas o enlaces aquí.
   ```
 - **Resultado:** La primera línea se asigna como título (en grande) y el párrafo siguiente será el subtítulo o el cuerpo de la tarjeta.
+  
+  ![Hero Simple](Imagenes/Hero-1.png)
+  ![Hero Avanzado](Imagenes/Hero-2.png)
 
 ### 📋 Acordeón (Accordion)
 El acordeón es ideal para preguntas frecuentes.
@@ -28,6 +31,11 @@ El acordeón es ideal para preguntas frecuentes.
   Recuerda revisar la rúbrica.
   ```
   *(La primera línea será la pestaña que se despliega; los párrafos siguientes quedarán dentro ocultos por defecto).*
+
+  ![Acordeón 1](Imagenes/Acordeon-1.png)
+  ![Acordeón 2](Imagenes/Acordeon-2.png)
+  ![Acordeón 3](Imagenes/Acordeon-3.png)
+  ![Acordeón 4](Imagenes/Acordeon-4.png)
 
 ---
 
@@ -47,6 +55,9 @@ Aplica para elementos que muestran múltiples ítems repetidos en serie. **El tr
   - Participa comentando a dos compañeros.
   ```
 - **Resultado:** El sistema generará **3 tarjetas independientes** acomodadas en un layout de columnas (Grid). "Lectura Sugerida" será el título de la primera tarjeta, "Tarea 1" el de la segunda, etc.
+  
+  ![Card Grid 1](Imagenes/Card-grid-1.png)
+  ![Card Grid 2](Imagenes/Card-grid-2.png)
 
 ### 🧭 Barra de Navegación (Navbar) y 🔗 Migas de pan (Breadcrumb)
 - **Estructura ideal:** Simplemente escribe cada opción en una nueva línea. Si agregas enlaces (`🔗`) al texto en Canvas, ¡se respetarán!
@@ -59,6 +70,10 @@ Aplica para elementos que muestran múltiples ítems repetidos en serie. **El tr
   ```
 - **Resultado:** Crea la barra horizontal. En Navbar, el primer ítem ("Mi Super Curso") se convierte en el "Logo/Marca" que va a la izquierda y el resto serán enlaces a la derecha.
 
+  ![Navbar 1](Imagenes/Nav-bar-1.png)
+  ![Navbar 2](Imagenes/Nav-bar-2.png)
+  ![Breadcrumb](Imagenes/Breadcumb.png)
+
 ### ▾ Desplegable (Dropdown)
 - **Estructura ideal:** Igual que la navegación, simplemente escribe cada opción en una línea nueva.
 - **Cómo hacerlo en el editor:**
@@ -70,6 +85,8 @@ Aplica para elementos que muestran múltiples ítems repetidos en serie. **El tr
   ```
 - **Resultado:** "Ver Módulos" será el botón principal en el que debes hacer clic, y al presionarlo se desplegará una lista blanca hacia abajo con las opciones "Módulo 1, 2 y 3".
 
+  ![Dropdown](Imagenes/Dropdown.png)
+
 ### ⚡ Grupo de Botones (Button Group) y 📝 Lista de Grupo (List Group)
 - **Estructura ideal:** Simplemente escribe cada palabra o frase en una línea nueva.
   ```text
@@ -79,9 +96,26 @@ Aplica para elementos que muestran múltiples ítems repetidos en serie. **El tr
   ```
 - **Resultado:** Crea una botonera unida horizontalmente (Btn Group) o una tabla apilada con filas divisoras (Lista de Grupo).
 
+  ![Grupo de Botones](Imagenes/Grupo%20de%20botones.png)
+  ![List Group 1](Imagenes/List-group%201.png)
+  ![List Group 2](Imagenes/List-group%202.png)
+
+### 🔢 Paginación (Pagination)
+- **Estructura ideal:** Simplemente escribe los números o nombres de las páginas en líneas nuevas. Si alguna termina con un asterisco (`*`), será la página actualmente activa. También conservará los hipervínculos si los añades desde Canvas.
+- **Cómo hacerlo en el editor:**
+  ```text
+  1
+  2*
+  3
+  ```
+- **Resultado:** Crea los botones de paginación enumerados y automáticamente detecta y vincula las flechas de retroceder (`‹`) y avanzar (`›`) al enlace anterior y siguiente según la lista que proporcionaste.
+
+  ![Paginación 1](Imagenes/Paginacion-1.png)
+  ![Paginación 2](Imagenes/Paginacion-2.png)
+
 ---
 
-## 3. Componentes de Bloque Único
+## 3. Envolturas ("Wrappers")
 
 Estos componentes simplemente envuelven tu texto para darle un estilo visual, sin fragmentarlo.
 
@@ -91,6 +125,12 @@ Estos componentes simplemente envuelven tu texto para darle un estilo visual, si
   Importante: La fecha de entrega se ha pospuesto para el próximo lunes.
   ```
 - **Resultado:** Todo lo seleccionado quedará empaquetado dentro de la caja de fondo o la cita con la franja a la izquierda. En el caso de las Citas (Blockquote), al abrir el editor avanzado podrás añadir el "Autor / Fuente" de manera opcional para que aparezca debajo de la cita. En las Alertas, te pedirá elegir el color (Información, Éxito, Advertencia o Error).
+
+  ![Alerta 1](Imagenes/Alerta%201.png)
+  ![Alerta 2](Imagenes/Alerta%202.png)
+  ![Cita](Imagenes/Bloque%20de%20cita.png)
+  ![Banner 1](Imagenes/Banner-1.png)
+  ![Banner 2](Imagenes/Banner-2.png)
 
 ---
 
@@ -102,12 +142,19 @@ Estos componentes simplemente envuelven tu texto para darle un estilo visual, si
   Ir al Examen Final
   ```
 
+  ![Botón 1](Imagenes/Boton-1.png)
+  ![Botón 2](Imagenes/Boton-2.png)
+  ![Badge](Imagenes/Badge.png)
+
 ### 📊 Barra de Progreso (Progress)
 - **Estructura ideal:** Una etiqueta que incluye un número seguido del signo `%`.
   ```text
   Avance de la unidad 40%
   ```
 - **Resultado:** El sistema detectará automáticamente el número `40` y construirá la barra coloreada hasta la mitad izquierda, dejando "Avance de la unidad" como texto superior.
+
+  ![Progreso 1](Imagenes/Progreso-1.png)
+  ![Progreso 2](Imagenes/Progreso-2.png)
 
 ---
 
