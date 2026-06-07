@@ -6,7 +6,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "canvas-designer@canvasdesigner.dev",
-      "strict_min_version": "109.0"
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": [],
+        "optional": []
+      }
     }
   },
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
@@ -24,8 +28,7 @@
     "default_title": "Canvas Designer"
   },
   "background": {
-    "scripts": ["background/service_worker.js"],
-    "type": "module"
+    "service_worker": "background/service_worker.js"
   },
   "content_scripts": [
     {
