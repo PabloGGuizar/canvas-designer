@@ -190,7 +190,7 @@ let lib = JSON.parse(JSON.stringify(DEFAULT));
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function css(o) {
-  return Object.entries(o).filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}:${v}`).join(';');
+  return Object.entries(o).filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}:${String(v).replace(/"/g, '&quot;')}`).join(';');
 }
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function deep(o) { return JSON.parse(JSON.stringify(o)); }
@@ -314,7 +314,6 @@ function renderPreview() {
     'font-size': ty.baseSize,
     'line-height': ty.lineHeight,
     'color': pl.text,
-    'background': pl.background,
     'padding': '32px',
   });
 
@@ -573,7 +572,9 @@ function renderPreview() {
 
 </div>`;
 
-  document.getElementById('preview-canvas').innerHTML = html;
+  const canvasEl = document.getElementById('preview-canvas');
+  canvasEl.innerHTML = html;
+  canvasEl.style.background = pl.background || '#ffffff';
 }
 
 // ── Control binding ───────────────────────────────────────────────────────────

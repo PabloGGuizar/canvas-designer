@@ -79,7 +79,7 @@ function injectBridge() {
 }
 
 // ── CSS helpers ───────────────────────────────────────────────────────────────
-function css(o) { return Object.entries(o).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${k}:${v}`).join(';'); }
+function css(o) { return Object.entries(o).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${k}:${String(v).replace(/"/g, '&quot;')}`).join(';'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ── Default library ───────────────────────────────────────────────────────────

@@ -1,16 +1,27 @@
 // Canvas Designer — Service Worker (MV3)
 
 // Migrate from sync to local to avoid quota limits
+// Wrapped in try/catch for Firefox compatibility (storage.sync may not be available
+// when the extension is not published/signed on AMO)
 chrome.storage.local.get(['migratedToLocal'], (res) => {
   if (!res.migratedToLocal) {
-    chrome.storage.sync.get(['cdTemplates', 'styleLibrary', 'cdSettings'], (syncData) => {
-      const payload = { migratedToLocal: true };
-      if (syncData.cdTemplates) payload.cdTemplates = syncData.cdTemplates;
-      if (syncData.styleLibrary) payload.styleLibrary = syncData.styleLibrary;
-      if (syncData.cdSettings) payload.cdSettings = syncData.cdSettings;
-      
-      chrome.storage.local.set(payload);
-    });
+    try {
+      chrome.storage.sync.get(['cdTemplates', 'styleLibrary', 'cdSettings'], (syncData) => {
+        if (chrome.runtime.lastError) {
+          // Firefox without sync access: just mark migration as done
+          chrome.storage.local.set({ migratedToLocal: true });
+          return;
+        }
+        const payload = { migratedToLocal: true };
+        if (syncData.cdTemplates) payload.cdTemplates = syncData.cdTemplates;
+        if (syncData.styleLibrary) payload.styleLibrary = syncData.styleLibrary;
+        if (syncData.cdSettings) payload.cdSettings = syncData.cdSettings;
+        chrome.storage.local.set(payload);
+      });
+    } catch (e) {
+      // storage.sync not available (Firefox unpublished extension)
+      chrome.storage.local.set({ migratedToLocal: true });
+    }
   }
 });
 

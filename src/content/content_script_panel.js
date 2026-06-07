@@ -250,6 +250,25 @@
 
     const listEl = document.getElementById('cd-item-list');
     if (listEl) {
+      // Reads current DOM values back into d.items before any re-render
+      const syncItemsFromDOM = () => {
+        const editors = listEl.querySelectorAll('.cd-item-editor');
+        let loopItems = type === 'navbar' ? d.items.slice(1) : d.items;
+        editors.forEach((el, i) => {
+          if (!loopItems[i]) return;
+          const labelEl = el.querySelector('.cd-item-label');
+          const bodyEl  = el.querySelector('.cd-item-body');
+          const hrefEl  = el.querySelector('.cd-item-href');
+          const imgEl   = el.querySelector('.cd-item-image');
+          if (labelEl) loopItems[i].label   = labelEl.value;
+          if (bodyEl)  loopItems[i].subBody = bodyEl.tagName === 'DIV' ? bodyEl.innerHTML : bodyEl.value;
+          if (hrefEl)  loopItems[i].href    = hrefEl.value;
+          if (imgEl)   loopItems[i].imageSrc = imgEl.value;
+        });
+        if (type === 'navbar') d.items = [d.items[0], ...loopItems];
+        else d.items = loopItems;
+      };
+
       const renderItems = () => {
         let itemsHtml = '';
         let loopItems = d.items;
@@ -261,7 +280,7 @@
             <button class="cd-item-remove" title="Eliminar">✖</button>
             <input type="text" class="cd-input cd-item-label" placeholder="Título" value="${it.label || ''}" style="margin-bottom:6px">
             ${['accordion', 'cardgrid', 'dropdown'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo / Opciones">${it.subBody || ''}</div>` : ''}
-            ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="" style="margin-top:6px">` : ''}
+            ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="${it.imageSrc || ''}" style="margin-top:6px">` : ''}
             ${['breadcrumb', 'pagination'].includes(type) ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
           </div>`;
         });
@@ -269,9 +288,11 @@
         
         listEl.querySelectorAll('.cd-item-remove').forEach((btn, idx) => {
           btn.addEventListener('click', () => {
-             loopItems.splice(idx, 1);
-             if (type === 'navbar') d.items = [d.items[0], ...loopItems];
-             else d.items = loopItems;
+             syncItemsFromDOM();
+             let loopItems2 = type === 'navbar' ? d.items.slice(1) : d.items;
+             loopItems2.splice(idx, 1);
+             if (type === 'navbar') d.items = [d.items[0], ...loopItems2];
+             else d.items = loopItems2;
              renderItems();
              updateLivePreview();
           });
@@ -280,6 +301,7 @@
       renderItems();
 
       document.getElementById('cd-add-item').addEventListener('click', () => {
+         syncItemsFromDOM();
          let loopItems = (type === 'navbar') ? d.items.slice(1) : d.items;
          loopItems.push({label: 'Nuevo Ítem', subBody: ''});
          if (type === 'navbar') d.items = [d.items[0], ...loopItems];

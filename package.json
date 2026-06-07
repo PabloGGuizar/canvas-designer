@@ -1,0 +1,14 @@
+{
+  "name": "canvas-designer",
+  "version": "0.1.0",
+  "description": "Diseña visualmente páginas de Canvas LMS con asistencia de IA",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "build:chrome": "node build.js chrome",
+    "build:firefox": "node build.js firefox"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
