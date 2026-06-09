@@ -6,7 +6,8 @@ const i18n = {
     hero_badge: "🚀 Versión Beta 0.1.0",
     hero_title: "Crea diseños increíbles en <span class='highlight'>Canvas LMS</span>",
     hero_subtitle: "Una extensión para profesores y diseñadores instruccionales. Añade tarjetas, botones, acordeones y más a tu contenido en segundos sin saber programar.",
-    hero_btn_download: "Descargar ZIP (v0.1.0)",
+    hero_btn_download: "Instalar en Chrome",
+    hero_btn_download_ff: "Descargar Firefox (v0.1.0)",
     hero_btn_guide: "Guía de Instalación",
     mockup_title: "Constructor Visual",
     mockup_btn: "Añadir Componente ✨",
@@ -19,17 +20,28 @@ const i18n = {
     feat_3_desc: "Guarda tus combinaciones favoritas como plantillas, expórtalas y compártelas con tus colegas.",
     feat_4_title: "100% Seguro y Privado",
     feat_4_desc: "Funciona offline. No requiere servidores externos ni bases de datos. Todo se guarda en tu propio navegador.",
-    inst_title: "Cómo instalar la Beta (Modo Desarrollador)",
-    inst_desc: "Ya que la extensión aún no está en la Chrome Web Store, puedes instalarla manualmente siguiendo estos 4 sencillos pasos:",
-    step_1_title: "Descarga y Descomprime",
-    step_1_desc: "Descarga el archivo <strong>.zip</strong> usando el botón de arriba y extráelo (descomprímelo) en una carpeta de tu computadora que no vayas a borrar.",
-    step_2_title: "Abre las Extensiones",
-    step_2_desc: "En tu navegador Chrome (o Edge/Brave), escribe <code>chrome://extensions/</code> en la barra de direcciones y presiona Enter.",
-    step_3_title: "Activa el Modo Desarrollador",
-    step_3_desc: "En la esquina superior derecha de la pantalla, activa el interruptor que dice <strong>\"Modo de desarrollador\"</strong> (Developer mode).",
-    step_4_title: "Carga la Extensión",
-    step_4_desc: "Haz clic en el botón <strong>\"Cargar sin empaquetar\"</strong> (Load unpacked) que aparecerá arriba a la izquierda. Selecciona la carpeta que descomprimiste en el paso 1.",
+    inst_title: "Cómo instalar",
+    inst_desc_chrome: "Disponible en la Chrome Web Store. ¡Instálala con un solo clic!",
+    inst_desc_ff: "Firefox permite cargar extensiones temporales sin publicarlas. Sigue estos 4 pasos:",
+    inst_ff_warning: "En Firefox, las extensiones temporales se eliminan al cerrar el navegador. Para uso permanente, instálala cada vez que abras Firefox o espera a que esté disponible en <strong>Firefox Add-ons (AMO)</strong>.",
+    tab_chrome: "Chrome / Edge / Brave",
+    tab_firefox: "Firefox",
+    step_1_title: "Abre la Chrome Web Store",
+    step_1_desc: "Haz clic en el botón <strong>\"Instalar en Chrome\"</strong> de arriba para ir directamente a la página de la extensión en la Chrome Web Store.",
+    step_2_title: "Añadir a Chrome",
+    step_2_desc: "Haz clic en el botón azul <strong>\"Añadir a Chrome\"</strong> y confirma los permisos en el cuadro de diálogo que aparece.",
+    step_3_title: "¡Listo para usar!",
+    step_3_desc: "La extensión se instala automáticamente. Abre Canvas LMS y verás el botón flotante <strong>\"✨\"</strong> en la esquina inferior derecha.",
     inst_success: "🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante \"✨\" en la esquina inferior derecha.",
+    inst_ff_success: "🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante \"✨\" en la esquina inferior derecha.",
+    ff_step_1_title: "Descarga y Descomprime",
+    ff_step_1_desc: "Descarga el archivo <strong>.zip</strong> de Firefox usando el botón de arriba y extráelo en una carpeta de tu computadora.",
+    ff_step_2_title: "Abre el Depurador",
+    ff_step_2_desc: "Escribe <code>about:debugging</code> en la barra de direcciones de Firefox y presiona Enter.",
+    ff_step_3_title: "Este Firefox",
+    ff_step_3_desc: "Haz clic en la opción <strong>\"Este Firefox\"</strong> (This Firefox) que aparece en el panel izquierdo.",
+    ff_step_4_title: "Cargar Complemento Temporal",
+    ff_step_4_desc: "Haz clic en <strong>\"Cargar complemento temporal...\"</strong> (Load Temporary Add-on) y selecciona el archivo <code>manifest.json</code> dentro de la carpeta descomprimida.",
     footer_copy: "&copy; 2026 Canvas Designer — Desarrollado por <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Código abierto bajo licencia MIT disponible en GitHub.",
     footer_src: "Repositorio (Código Fuente)",
     footer_bug: "Reportar un Error"
@@ -41,7 +53,8 @@ const i18n = {
     hero_badge: "🚀 Beta Version 0.1.0",
     hero_title: "Create amazing designs in <span class='highlight'>Canvas LMS</span>",
     hero_subtitle: "An extension for teachers and instructional designers. Add cards, buttons, accordions, and more to your content in seconds without coding.",
-    hero_btn_download: "Download ZIP (v0.1.0)",
+    hero_btn_download: "Install on Chrome",
+    hero_btn_download_ff: "Download Firefox (v0.1.0)",
     hero_btn_guide: "Installation Guide",
     mockup_title: "Visual Builder",
     mockup_btn: "Add Component ✨",
@@ -54,17 +67,28 @@ const i18n = {
     feat_3_desc: "Save your favorite combinations as templates, export them, and share them with colleagues.",
     feat_4_title: "100% Secure and Private",
     feat_4_desc: "Works offline. No external servers or databases required. Everything is saved in your own browser.",
-    inst_title: "How to install the Beta (Developer Mode)",
-    inst_desc: "Since the extension is not yet in the Chrome Web Store, you can install it manually by following these 4 simple steps:",
-    step_1_title: "Download and Extract",
-    step_1_desc: "Download the <strong>.zip</strong> file using the button above and extract it to a folder on your computer that you won't delete.",
-    step_2_title: "Open Extensions",
-    step_2_desc: "In your Chrome (or Edge/Brave) browser, type <code>chrome://extensions/</code> in the address bar and press Enter.",
-    step_3_title: "Enable Developer Mode",
-    step_3_desc: "In the top right corner of the screen, toggle the switch that says <strong>\"Developer mode\"</strong>.",
-    step_4_title: "Load Extension",
-    step_4_desc: "Click the <strong>\"Load unpacked\"</strong> button that will appear on the top left. Select the folder you extracted in step 1.",
+    inst_title: "How to Install",
+    inst_desc_chrome: "Available on the Chrome Web Store. Install it with a single click!",
+    inst_desc_ff: "Firefox lets you load temporary extensions without publishing them. Follow these 4 steps:",
+    inst_ff_warning: "In Firefox, temporary extensions are removed when the browser is closed. For permanent use, reload it each time you open Firefox or wait until it's available on <strong>Firefox Add-ons (AMO)</strong>.",
+    tab_chrome: "Chrome / Edge / Brave",
+    tab_firefox: "Firefox",
+    step_1_title: "Open the Chrome Web Store",
+    step_1_desc: "Click the <strong>\"Install on Chrome\"</strong> button above to go directly to the extension page on the Chrome Web Store.",
+    step_2_title: "Add to Chrome",
+    step_2_desc: "Click the blue <strong>\"Add to Chrome\"</strong> button and confirm the permissions in the dialog that appears.",
+    step_3_title: "Ready to use!",
+    step_3_desc: "The extension installs automatically. Open Canvas LMS and you'll see the floating <strong>\"✨\"</strong> button in the bottom right corner.",
     inst_success: "🎉 <strong>Done!</strong> Open any page of your editor in Canvas LMS and you will see a new floating \"✨\" button in the bottom right corner.",
+    inst_ff_success: "🎉 <strong>Done!</strong> Open any page of your editor in Canvas LMS and you will see a new floating \"✨\" button in the bottom right corner.",
+    ff_step_1_title: "Download and Extract",
+    ff_step_1_desc: "Download the <strong>.zip</strong> file for Firefox using the button above and extract it to a folder on your computer.",
+    ff_step_2_title: "Open Debugger",
+    ff_step_2_desc: "Type <code>about:debugging</code> in the Firefox address bar and press Enter.",
+    ff_step_3_title: "This Firefox",
+    ff_step_3_desc: "Click the <strong>\"This Firefox\"</strong> option in the left panel.",
+    ff_step_4_title: "Load Temporary Add-on",
+    ff_step_4_desc: "Click <strong>\"Load Temporary Add-on...\"</strong> and select the <code>manifest.json</code> file inside the extracted folder.",
     footer_copy: "&copy; 2026 Canvas Designer — Developed by <a href='https://www.linkedin.com/in/pablogguizar' target='_blank'>Pablo G. Guízar</a>. Open source under MIT license available on GitHub.",
     footer_src: "Repository (Source Code)",
     footer_bug: "Report an Issue"
@@ -165,3 +189,23 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLang(currentLang);
   });
 });
+
+// Browser tab switcher (global, called from HTML onclick)
+function switchBrowserTab(browser) {
+  const chromeSteps  = document.getElementById('steps-chrome');
+  const firefoxSteps = document.getElementById('steps-firefox');
+  const tabChrome    = document.getElementById('tab-chrome');
+  const tabFirefox   = document.getElementById('tab-firefox');
+
+  if (browser === 'firefox') {
+    chromeSteps.classList.add('hidden');
+    firefoxSteps.classList.remove('hidden');
+    tabChrome.classList.remove('active');
+    tabFirefox.classList.add('active', 'ff-active');
+  } else {
+    firefoxSteps.classList.add('hidden');
+    chromeSteps.classList.remove('hidden');
+    tabFirefox.classList.remove('active', 'ff-active');
+    tabChrome.classList.add('active');
+  }
+}

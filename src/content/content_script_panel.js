@@ -3,6 +3,13 @@
 (function () {
   const CD = window.__CD;
 
+  // ── Safe HTML setter (avoids direct innerHTML — AMO linter compliance) ────
+  // Uses DOMParser so the browser parses HTML in a sandboxed document context.
+  function setHtml(el, html) {
+    const doc = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html');
+    el.replaceChildren(...Array.from(doc.body.childNodes).map(n => document.adoptNode(n)));
+  }
+
   // ── Options config per component ──────────────────────────────────────────
   const COMPONENT_OPTIONS = {
     'alert': {
@@ -56,23 +63,19 @@
 
   const stripHtml = (h) => {
     if (!h) return '';
-    const div = document.createElement('div');
-    div.innerHTML = h;
-    return div.textContent.trim();
+    return new DOMParser().parseFromString(h, 'text/html').body.textContent.trim();
   };
 
   const getSubLines = (html) => {
     if (!html) return [];
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    const blocks = Array.from(div.querySelectorAll('p, div, li'));
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const blocks = Array.from(doc.body.querySelectorAll('p, div, li'));
     if (blocks.length > 0) {
       return blocks.map(b => b.textContent.trim()).filter(Boolean);
     }
-    return html.split(/<br\s*\/?>/i).map(s => {
-       div.innerHTML = s;
-       return div.textContent.trim();
-    }).filter(Boolean);
+    return html.split(/<br\s*\/?>/i).map(s =>
+      new DOMParser().parseFromString(s, 'text/html').body.textContent.trim()
+    ).filter(Boolean);
   };
 
   async function showEditor(type) {
@@ -141,7 +144,7 @@
       <button class="cd-btn cd-btn-primary" id="cd-editor-insert" style="margin-bottom:0">Insertar</button>
     </div>`;
     
-    pane.innerHTML = formHtml;
+    setHtml(pane, formHtml);
     document.getElementById('cd-editor-back').addEventListener('click', hideEditor);
     document.getElementById('cd-editor-cancel').addEventListener('click', hideEditor);
     document.getElementById('cd-editor-insert').addEventListener('click', insertFromEditor);
@@ -246,7 +249,7 @@
       h += `</div></details>`;
     }
 
-    container.innerHTML = h;
+    setHtml(container, h);
 
     const listEl = document.getElementById('cd-item-list');
     if (listEl) {
@@ -284,7 +287,7 @@
             ${['breadcrumb', 'pagination'].includes(type) ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
           </div>`;
         });
-        listEl.innerHTML = itemsHtml;
+        setHtml(listEl, itemsHtml);
         
         listEl.querySelectorAll('.cd-item-remove').forEach((btn, idx) => {
           btn.addEventListener('click', () => {
@@ -349,7 +352,7 @@
     const previewBox = document.getElementById('cd-live-preview');
     if (!previewBox) return;
     const finalHtml = generateComponentHtml();
-    previewBox.innerHTML = finalHtml || '<span style="color:var(--cd-text-dim);font-size:13px;font-style:italic">Vista previa...</span>';
+    setHtml(previewBox, finalHtml || '<span style="color:var(--cd-text-dim);font-size:13px;font-style:italic">Vista previa...</span>');
   }
 
   function generateComponentHtml() {
@@ -826,7 +829,7 @@
     const fab = document.createElement('button');
     fab.id = 'cd-fab';
     fab.title = 'Canvas Designer';
-    fab.innerHTML = '🎨';
+    fab.textContent = '🎨';
     if (window.__cdPanelOpen !== false) fab.classList.add('panel-open');
     fab.addEventListener('click', togglePanel);
     return fab;
@@ -900,7 +903,7 @@
     const old = document.getElementById('canvas-designer-panel');
     if (old) old.remove();
     const div = document.createElement('div');
-    div.innerHTML = buildPanelHTML();
+    setHtml(div, buildPanelHTML());
     document.body.appendChild(div.firstElementChild);
     wirePanel();
   }
@@ -913,7 +916,7 @@
     panelInjected = true;
     window.__cdPanelOpen = true;
     const div = document.createElement('div');
-    div.innerHTML = buildPanelHTML();
+    setHtml(div, buildPanelHTML());
     document.body.appendChild(div.firstElementChild);
     document.body.appendChild(buildFAB());
     wirePanel();

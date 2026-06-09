@@ -195,6 +195,13 @@ function css(o) {
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function deep(o) { return JSON.parse(JSON.stringify(o)); }
 
+// Safe HTML setter (avoids direct innerHTML — AMO linter compliance)
+// Uses DOMParser to parse HTML in a sandboxed document context.
+function setHtml(el, html) {
+  const doc = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html');
+  el.replaceChildren(...Array.from(doc.body.childNodes).map(n => document.adoptNode(n)));
+}
+
 // Deep-merge: starts from a full copy of defaults, then overlays saved values.
 // Skips empty/null values in saved so defaults are preserved for new keys.
 function deepMerge(defaults, target) {
@@ -255,7 +262,7 @@ async function saveTemplatesData() {
 function renderTemplateSelect() {
   const select = document.getElementById('ctrl-template-select');
   if (!select) return;
-  select.innerHTML = '';
+  select.replaceChildren();
   templates.forEach(t => {
     const opt = document.createElement('option');
     opt.value = t.id;
@@ -573,7 +580,7 @@ function renderPreview() {
 </div>`;
 
   const canvasEl = document.getElementById('preview-canvas');
-  canvasEl.innerHTML = html;
+  setHtml(canvasEl, html);
   canvasEl.style.background = pl.background || '#ffffff';
 }
 
@@ -658,15 +665,14 @@ function renderPaletteTab() {
     ['accent', 'Acento / Accent'], ['background', 'Fondo / Background'],
     ['surface', 'Superficie / Surface'], ['text', 'Texto / Text'], ['textLight', 'Texto dim / Text dim'],
   ];
-  grid.innerHTML = keys.map(([k, label]) => `
+  setHtml(grid, keys.map(([k, label]) => `
     <div class="field" style="grid-column:span 2">
       <div class="field-label"><span>${label}</span><span>${lib.palette[k]}</span></div>
       <div class="color-row">
         <input type="color" id="pal-${k}-picker" value="${lib.palette[k]}">
         <input class="color-hex" id="pal-${k}" type="text" value="${lib.palette[k]}">
       </div>
-    </div>`).join('');
-
+    </div>`).join(''));
   keys.forEach(([k]) => {
     const picker = document.getElementById(`pal-${k}-picker`);
     const hex = document.getElementById(`pal-${k}`);

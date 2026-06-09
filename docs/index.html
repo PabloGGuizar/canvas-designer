@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Canvas Designer — Extensión para Chrome</title>
+  <title>Canvas Designer — Extensión para Chrome y Firefox</title>
   <meta name="description" content="Añade hermosos componentes visuales y diseños interactivos a tu editor de Canvas LMS en segundos.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +36,11 @@
       <p class="hero-subtitle" data-i18n="hero_subtitle">Una extensión para profesores y diseñadores instruccionales. Añade tarjetas, botones, acordeones y más a tu contenido en segundos sin saber programar.</p>
       
       <div class="hero-actions">
-        <a href="./canvas-designer-v0.1.0.zip" download class="btn btn-primary">
-          <span class="icon">⬇️</span> <span data-i18n="hero_btn_download">Descargar ZIP (v0.1.0)</span>
+        <a href="https://chromewebstore.google.com/detail/aaahdhclombogdjifdjpmppcekpoonph" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <span class="icon">🌐</span> <span data-i18n="hero_btn_download">Instalar en Chrome</span>
+        </a>
+        <a href="../dist/canvas-designer-firefox.zip" download class="btn btn-firefox">
+          <span class="icon">🦊</span> <span data-i18n="hero_btn_download_ff">Descargar Firefox (v0.1.0)</span>
         </a>
         <a href="#install" class="btn btn-secondary">
           <span class="icon">📖</span> <span data-i18n="hero_btn_guide">Guía de Instalación</span>
@@ -94,38 +97,77 @@
 
   <section id="install" class="install-section container">
     <div class="install-wrapper glass-panel">
-      <h2 class="section-title" data-i18n="inst_title">Cómo instalar la Beta (Modo Desarrollador)</h2>
-      <p class="install-desc" data-i18n="inst_desc">Ya que la extensión aún no está en la Chrome Web Store, puedes instalarla manualmente siguiendo estos 4 sencillos pasos:</p>
-      
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-num">1</div>
-          <h3 data-i18n="step_1_title">Descarga y Descomprime</h3>
-          <p data-i18n="step_1_desc">Descarga el archivo <strong>.zip</strong> usando el botón de arriba y extráelo (descomprímelo) en una carpeta de tu computadora que no vayas a borrar.</p>
+      <h2 class="section-title" data-i18n="inst_title">Cómo instalar</h2>
+
+      <!-- Browser tab switcher -->
+      <div class="browser-tabs">
+        <button class="browser-tab active" id="tab-chrome" onclick="switchBrowserTab('chrome')">
+          🌐 <span data-i18n="tab_chrome">Chrome / Edge / Brave</span>
+        </button>
+        <button class="browser-tab" id="tab-firefox" onclick="switchBrowserTab('firefox')">
+          🦊 <span data-i18n="tab_firefox">Firefox</span>
+        </button>
+      </div>
+
+      <!-- ── CHROME STEPS ── -->
+      <div id="steps-chrome" class="browser-steps">
+        <p class="install-desc" data-i18n="inst_desc_chrome">Disponible en la Chrome Web Store. ¡Instálala con un solo clic!</p>
+        <div class="steps-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3 data-i18n="step_1_title">Abre la Chrome Web Store</h3>
+            <p data-i18n="step_1_desc">Haz clic en el botón <strong>"Instalar en Chrome"</strong> de arriba para ir directamente a la página de la extensión en la Chrome Web Store.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3 data-i18n="step_2_title">Añadir a Chrome</h3>
+            <p data-i18n="step_2_desc">Haz clic en el botón azul <strong>"Añadir a Chrome"</strong> y confirma los permisos en el cuadro de diálogo que aparece.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3 data-i18n="step_3_title">¡Listo para usar!</h3>
+            <p data-i18n="step_3_desc">La extensión se instala automáticamente. Abre Canvas LMS y verás el botón flotante <strong>"✨"</strong> en la esquina inferior derecha.</p>
+          </div>
         </div>
-        
-        <div class="step">
-          <div class="step-num">2</div>
-          <h3 data-i18n="step_2_title">Abre las Extensiones</h3>
-          <p data-i18n="step_2_desc">En tu navegador Chrome (o Edge/Brave), escribe <code>chrome://extensions/</code> en la barra de direcciones y presiona Enter.</p>
-        </div>
-        
-        <div class="step">
-          <div class="step-num">3</div>
-          <h3 data-i18n="step_3_title">Activa el Modo Desarrollador</h3>
-          <p data-i18n="step_3_desc">En la esquina superior derecha de la pantalla, activa el interruptor que dice <strong>"Modo de desarrollador"</strong> (Developer mode).</p>
-        </div>
-        
-        <div class="step">
-          <div class="step-num">4</div>
-          <h3 data-i18n="step_4_title">Carga la Extensión</h3>
-          <p data-i18n="step_4_desc">Haz clic en el botón <strong>"Cargar sin empaquetar"</strong> (Load unpacked) que aparecerá arriba a la izquierda. Selecciona la carpeta que descomprimiste en el paso 1.</p>
+        <div class="install-success">
+          <p data-i18n="inst_success">🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante "✨" en la esquina inferior derecha.</p>
         </div>
       </div>
 
-      <div class="install-success">
-        <p data-i18n="inst_success">🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante "✨" en la esquina inferior derecha.</p>
+      <!-- ── FIREFOX STEPS ── -->
+      <div id="steps-firefox" class="browser-steps hidden">
+        <p class="install-desc" data-i18n="inst_desc_ff">Firefox permite cargar extensiones temporales sin necesidad de publicarlas. Sigue estos 4 pasos:</p>
+        <div class="install-warning">
+          <span>⚠️</span>
+          <p data-i18n="inst_ff_warning">En Firefox, las extensiones temporales se eliminan al cerrar el navegador. Para uso permanente, instálala cada vez que abras Firefox o espera a que esté disponible en <strong>Firefox Add-ons (AMO)</strong>.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-num step-num-ff">1</div>
+            <h3 data-i18n="ff_step_1_title">Descarga y Descomprime</h3>
+            <p data-i18n="ff_step_1_desc">Descarga el archivo <strong>.zip</strong> de Firefox usando el botón de arriba y extráelo en una carpeta de tu computadora.</p>
+          </div>
+          <div class="step">
+            <div class="step-num step-num-ff">2</div>
+            <h3 data-i18n="ff_step_2_title">Abre el Depurador</h3>
+            <p data-i18n="ff_step_2_desc">Escribe <code>about:debugging</code> en la barra de direcciones de Firefox y presiona Enter.</p>
+          </div>
+          <div class="step">
+            <div class="step-num step-num-ff">3</div>
+            <h3 data-i18n="ff_step_3_title">Este Firefox</h3>
+            <p data-i18n="ff_step_3_desc">Haz clic en la opción <strong>"Este Firefox"</strong> (This Firefox) que aparece en el panel izquierdo.</p>
+          </div>
+          <div class="step">
+            <div class="step-num step-num-ff">4</div>
+            <h3 data-i18n="ff_step_4_title">Cargar Complemento Temporal</h3>
+            <p data-i18n="ff_step_4_desc">Haz clic en <strong>"Cargar complemento temporal..."</strong> (Load Temporary Add-on) y selecciona el archivo <code>manifest.json</code> dentro de la carpeta descomprimida.</p>
+          </div>
+        </div>
+        <div class="install-success">
+          <p data-i18n="inst_ff_success">🎉 <strong>¡Listo!</strong> Abre cualquier página de tu editor en Canvas LMS y verás un nuevo botón flotante "✨" en la esquina inferior derecha.</p>
+        </div>
       </div>
+
     </div>
   </section>
 
