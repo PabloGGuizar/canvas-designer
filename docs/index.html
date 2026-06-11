@@ -39,8 +39,8 @@
         <a href="https://chromewebstore.google.com/detail/aaahdhclombogdjifdjpmppcekpoonph" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           <span class="icon">🌐</span> <span data-i18n="hero_btn_download">Instalar en Chrome</span>
         </a>
-        <a href="../dist/canvas-designer-firefox.zip" download class="btn btn-firefox">
-          <span class="icon">🦊</span> <span data-i18n="hero_btn_download_ff">Descargar Firefox (v0.1.0)</span>
+        <a href="https://addons.mozilla.org/es-MX/firefox/addon/canvaslms-designer/" target="_blank" rel="noopener noreferrer" class="btn btn-firefox">
+          <span class="icon">🦊</span> <span data-i18n="hero_btn_download_ff">Instalar en Firefox</span>
         </a>
         <a href="#install" class="btn btn-secondary">
           <span class="icon">📖</span> <span data-i18n="hero_btn_guide">Guía de Instalación</span>
@@ -136,31 +136,22 @@
 
       <!-- ── FIREFOX STEPS ── -->
       <div id="steps-firefox" class="browser-steps hidden">
-        <p class="install-desc" data-i18n="inst_desc_ff">Firefox permite cargar extensiones temporales sin necesidad de publicarlas. Sigue estos 4 pasos:</p>
-        <div class="install-warning">
-          <span>⚠️</span>
-          <p data-i18n="inst_ff_warning">En Firefox, las extensiones temporales se eliminan al cerrar el navegador. Para uso permanente, instálala cada vez que abras Firefox o espera a que esté disponible en <strong>Firefox Add-ons (AMO)</strong>.</p>
-        </div>
-        <div class="steps-grid">
+        <p class="install-desc" data-i18n="inst_desc_ff">Disponible en Firefox Add-ons. ¡Instálala con un solo clic!</p>
+        <div class="steps-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
           <div class="step">
             <div class="step-num step-num-ff">1</div>
-            <h3 data-i18n="ff_step_1_title">Descarga y Descomprime</h3>
-            <p data-i18n="ff_step_1_desc">Descarga el archivo <strong>.zip</strong> de Firefox usando el botón de arriba y extráelo en una carpeta de tu computadora.</p>
+            <h3 data-i18n="ff_step_1_title">Abre Firefox Add-ons</h3>
+            <p data-i18n="ff_step_1_desc">Haz clic en el botón <strong>"Instalar en Firefox"</strong> de arriba para ir directamente a la página de la extensión en Firefox Add-ons.</p>
           </div>
           <div class="step">
             <div class="step-num step-num-ff">2</div>
-            <h3 data-i18n="ff_step_2_title">Abre el Depurador</h3>
-            <p data-i18n="ff_step_2_desc">Escribe <code>about:debugging</code> en la barra de direcciones de Firefox y presiona Enter.</p>
+            <h3 data-i18n="ff_step_2_title">Añadir a Firefox</h3>
+            <p data-i18n="ff_step_2_desc">Haz clic en el botón azul <strong>"Agregar a Firefox"</strong> y confirma los permisos en el cuadro de diálogo que aparece.</p>
           </div>
           <div class="step">
             <div class="step-num step-num-ff">3</div>
-            <h3 data-i18n="ff_step_3_title">Este Firefox</h3>
-            <p data-i18n="ff_step_3_desc">Haz clic en la opción <strong>"Este Firefox"</strong> (This Firefox) que aparece en el panel izquierdo.</p>
-          </div>
-          <div class="step">
-            <div class="step-num step-num-ff">4</div>
-            <h3 data-i18n="ff_step_4_title">Cargar Complemento Temporal</h3>
-            <p data-i18n="ff_step_4_desc">Haz clic en <strong>"Cargar complemento temporal..."</strong> (Load Temporary Add-on) y selecciona el archivo <code>manifest.json</code> dentro de la carpeta descomprimida.</p>
+            <h3 data-i18n="ff_step_3_title">¡Listo para usar!</h3>
+            <p data-i18n="ff_step_3_desc">La extensión se instala automáticamente. Abre Canvas LMS y verás el botón flotante <strong>"✨"</strong> en la esquina inferior derecha.</p>
           </div>
         </div>
         <div class="install-success">
