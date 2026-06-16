@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Canvas Designer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Diseña visualmente páginas de Canvas LMS con asistencia de IA / Visually design Canvas LMS pages with AI assistance.",
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": [

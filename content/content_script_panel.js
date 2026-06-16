@@ -131,14 +131,14 @@
     const type = currentEditorType;
 
     let formHtml = `<div id="cd-editor-header">
-      <button class="cd-back-btn" id="cd-editor-back" title="Regresar">←</button>
-      <span id="cd-editor-title">Editar ${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+      <button class="cd-back-btn" id="cd-editor-back" title="${CD.t('backBtn')}">←</button>
+      <span id="cd-editor-title">${CD.t('editTitle')} ${CD.t('to' + type.charAt(0).toUpperCase() + type.slice(1))}</span>
     </div>
     <div id="cd-live-preview" class="cd-preview-box"></div>
     <div class="cd-editor-form" id="cd-form-container"></div>
     <div class="cd-btn-group">
-      <button class="cd-btn cd-btn-secondary" id="cd-editor-cancel" style="margin-bottom:0">Cancelar</button>
-      <button class="cd-btn cd-btn-primary" id="cd-editor-insert" style="margin-bottom:0">Insertar</button>
+      <button class="cd-btn cd-btn-secondary" id="cd-editor-cancel" style="margin-bottom:0">${CD.t('cancelBtn')}</button>
+      <button class="cd-btn cd-btn-primary" id="cd-editor-insert" style="margin-bottom:0">${CD.t('insertBtn')}</button>
     </div>`;
     
     pane.innerHTML = formHtml;
@@ -174,47 +174,47 @@
     }
     if (optsConfig && optsConfig.isProgress) {
       const pctMatch = (d.title || '').match(/(\d+)\s*%/);
-      h += addField('f-pct', 'Porcentaje (0-100)', pctMatch ? pctMatch[1] : '70');
-      h += addField('f-label', 'Etiqueta', d.title.replace(/\d+\s*%/, '').trim() || 'Progreso');
+      h += addField('f-pct', CD.t('pctLabel'), pctMatch ? pctMatch[1] : '70');
+      h += addField('f-label', CD.t('labelField'), d.title.replace(/\d+\s*%/, '').trim() || 'Progreso');
     }
 
     if (['hero', 'banner', 'card', 'alert', 'blockquote'].includes(type)) {
       if (type === 'blockquote') {
          let fText = currentEditorData.rawHtml || (d.title + (d.body ? '<br>' + d.body : ''));
-         h += addField('f-body', 'Cita / Texto', fText, true);
-         h += addField('f-title', 'Autor / Fuente (Opcional)', '');
+         h += addField('f-body', CD.t('quoteField'), fText, true);
+         h += addField('f-title', CD.t('authorField'), '');
       } else {
-         h += addField('f-title', 'Título / Texto', d.title || '');
+         h += addField('f-title', CD.t('titleField'), d.title || '');
          if (type !== 'banner') {
-            h += addField('f-body', 'Cuerpo / Descripción', d.body || '', true);
+            h += addField('f-body', CD.t('bodyField'), d.body || '', true);
          }
       }
       if (type === 'card') {
-         h += addField('f-image', 'URL de Imagen (Opcional)', '');
+         h += addField('f-image', CD.t('imageField'), '');
       }
     } else if (['button', 'badge'].includes(type)) {
-      h += addField('f-title', 'Texto', d.title || 'Botón');
-      if (type === 'button') h += addField('f-href', 'Enlace URL', d.href || '#');
+      h += addField('f-title', CD.t('textField'), d.title || 'Botón');
+      if (type === 'button') h += addField('f-href', CD.t('hrefField'), d.href || '#');
     } else if (['accordion', 'listgroup', 'navbar', 'breadcrumb', 'btngroup', 'dropdown', 'cardgrid', 'pagination'].includes(type)) {
       if (type === 'accordion') {
-         h += addField('f-title', 'Título General (opcional)', d.title || '');
+         h += addField('f-title', CD.t('genTitleField'), d.title || '');
       }
       if (type === 'navbar') {
-         h += addField('f-title', 'Marca / Título', d.items[0]?.label || '');
+         h += addField('f-title', CD.t('brandField'), d.items[0]?.label || '');
       }
 
-      h += `<div class="cd-field"><label class="cd-label">Elementos</label><div id="cd-item-list" class="cd-item-list"></div></div>
-            <button class="cd-btn cd-btn-secondary" id="cd-add-item">+ Añadir Ítem</button>`;
+      h += `<div class="cd-field"><label class="cd-label">${CD.t('itemsField')}</label><div id="cd-item-list" class="cd-item-list"></div></div>
+            <button class="cd-btn cd-btn-secondary" id="cd-add-item">${CD.t('addItemBtn')}</button>`;
     } else if (type === 'progress') {
-       h += addField('f-title', 'Etiqueta', d.title || 'Progreso');
-       h += addField('f-pct', 'Porcentaje (0-100)', '70');
+       h += addField('f-title', CD.t('labelField'), d.title || 'Progreso');
+       h += addField('f-pct', CD.t('pctLabel'), '70');
     }
 
     const styleKey = type === 'cardgrid' ? 'card' : (type === 'btngroup' ? 'button' : type);
     const compStyles = CD.getLib()[styleKey] || {};
     if (Object.keys(compStyles).length > 0) {
       h += `<details class="cd-custom-styles" style="margin-top:16px; border:1px solid var(--cd-border); border-radius:8px; background:rgba(0,0,0,0.1);">
-        <summary style="padding:10px; font-weight:600; cursor:pointer; font-size:12px; outline:none;">⚙️ Estilos de este elemento</summary>
+        <summary style="padding:10px; font-weight:600; cursor:pointer; font-size:12px; outline:none;">${CD.t('itemStyles')}</summary>
         <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">`;
       for (const [sKey, sVal] of Object.entries(compStyles)) {
         if (typeof sVal !== 'string') continue;
@@ -254,15 +254,15 @@
         let itemsHtml = '';
         let loopItems = d.items;
         if (type === 'navbar') loopItems = d.items.slice(1);
-        if (loopItems.length === 0) loopItems = [{label: 'Opción 1', subBody: ''}];
+        if (loopItems.length === 0) loopItems = [{label: CD.t('defaultOption'), subBody: ''}];
         
         loopItems.forEach((it, i) => {
           itemsHtml += `<div class="cd-item-editor" data-idx="${i}">
-            <button class="cd-item-remove" title="Eliminar">✖</button>
-            <input type="text" class="cd-input cd-item-label" placeholder="Título" value="${it.label || ''}" style="margin-bottom:6px">
-            ${['accordion', 'cardgrid', 'dropdown'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="Cuerpo / Opciones">${it.subBody || ''}</div>` : ''}
-            ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="URL de Imagen (Opcional)" value="" style="margin-top:6px">` : ''}
-            ${['breadcrumb', 'pagination'].includes(type) ? `<input type="text" class="cd-input cd-item-href" placeholder="URL" value="${it.href || '#'}">` : ''}
+            <button class="cd-item-remove" title="${CD.t('removeBtn')}">✖</button>
+            <input type="text" class="cd-input cd-item-label" placeholder="${CD.t('placeholderTitle')}" value="${it.label || ''}" style="margin-bottom:6px">
+            ${['accordion', 'cardgrid', 'dropdown'].includes(type) ? `<div class="cd-textarea cd-editable cd-item-body" contenteditable="true" style="overflow-y:auto; background:rgba(0,0,0,0.2);" placeholder="${CD.t('placeholderBody')}">${it.subBody || ''}</div>` : ''}
+            ${type === 'cardgrid' ? `<input type="text" class="cd-input cd-item-image" placeholder="${CD.t('placeholderImage')}" value="" style="margin-top:6px">` : ''}
+            ${['breadcrumb', 'pagination'].includes(type) ? `<input type="text" class="cd-input cd-item-href" placeholder="${CD.t('placeholderHref')}" value="${it.href || '#'}">` : ''}
           </div>`;
         });
         listEl.innerHTML = itemsHtml;
@@ -281,7 +281,7 @@
 
       document.getElementById('cd-add-item').addEventListener('click', () => {
          let loopItems = (type === 'navbar') ? d.items.slice(1) : d.items;
-         loopItems.push({label: 'Nuevo Ítem', subBody: ''});
+         loopItems.push({label: CD.t('newItem'), subBody: ''});
          if (type === 'navbar') d.items = [d.items[0], ...loopItems];
          else d.items = loopItems;
          renderItems();
@@ -327,7 +327,7 @@
     const previewBox = document.getElementById('cd-live-preview');
     if (!previewBox) return;
     const finalHtml = generateComponentHtml();
-    previewBox.innerHTML = finalHtml || '<span style="color:var(--cd-text-dim);font-size:13px;font-style:italic">Vista previa...</span>';
+    previewBox.innerHTML = finalHtml || `<span style="color:var(--cd-text-dim);font-size:13px;font-style:italic">${CD.t('previewPlaceholder')}</span>`;
   }
 
   function generateComponentHtml() {
@@ -371,13 +371,13 @@
     }
 
     switch (type) {
-      case 'hero': finalHtml = CD.makeHero(gTitle || 'Título del Héroe', gBody || 'Subtítulo', lib); break;
-      case 'banner': finalHtml = CD.makeBanner(gTitle || 'Texto', lib); break;
-      case 'card': finalHtml = CD.makeCard(gTitle || 'Título', gBody || 'Contenido', lib, gImage); break;
+      case 'hero': finalHtml = CD.makeHero(gTitle || CD.t('dfHeroTitle'), gBody || CD.t('dfSubtitle'), lib); break;
+      case 'banner': finalHtml = CD.makeBanner(gTitle || CD.t('dfBannerText'), lib); break;
+      case 'card': finalHtml = CD.makeCard(gTitle || CD.t('dfTitle'), gBody || CD.t('dfContent'), lib, gImage); break;
       case 'button': {
         const b = lib.button, ty = lib.typography;
         const link = gHref;
-        const display = gTitle || 'Botón';
+        const display = gTitle || CD.t('dfBtnText');
         if (variant === 'outlined') {
           const s = `background:transparent;color:${b.background};border-radius:${b.borderRadius};padding:${b.padding};font-size:${b.fontSize};font-weight:${b.fontWeight};text-decoration:none;display:inline-block;font-family:${ty.bodyFont};border:2px solid ${b.background}`;
           finalHtml = `<a href="${link}" style="${s}">${display}</a>`;
@@ -394,22 +394,22 @@
         const pl = lib.palette, ty = lib.typography;
         const colors = { primary: pl.primary, secondary: pl.secondary, accent: pl.accent, success: '#10b981' };
         const bg = colors[variant] || pl.primary;
-        finalHtml = `<span style="background:${bg};color:#fff;border-radius:20px;padding:3px 10px;font-size:0.78em;font-weight:600;display:inline-block;font-family:${ty.bodyFont};line-height:1.5">${gTitle || 'Insignia'}</span>`;
+        finalHtml = `<span style="background:${bg};color:#fff;border-radius:20px;padding:3px 10px;font-size:0.78em;font-weight:600;display:inline-block;font-family:${ty.bodyFont};line-height:1.5">${gTitle || CD.t('dfBadgeText')}</span>`;
         break;
       }
-      case 'progress': finalHtml = CD.makeProgress(gLabel || 'Progreso', parseInt(gPct) || 70, lib); break;
-      case 'blockquote': finalHtml = CD.makeBlockquote(gBody || 'Texto destacado para la cita', gTitle || '', lib); break;
+      case 'progress': finalHtml = CD.makeProgress(gLabel || CD.t('dfProgressLabel'), parseInt(gPct) || 70, lib); break;
+      case 'blockquote': finalHtml = CD.makeBlockquote(gBody || CD.t('dfQuoteHighlight'), gTitle || '', lib); break;
       case 'accordion': {
         if (gItems.length > 1 || (gItems.length === 1 && gTitle)) {
-          finalHtml = gItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
+          finalHtml = gItems.map(i => CD.makeAccordion(i.label || CD.t('dfTitle'), i.subBody || `<p>${CD.t('dfContent')}</p>`, lib)).join('');
         } else {
           const i = gItems[0];
-          finalHtml = CD.makeAccordion(i?.label || gTitle || 'Título del acordeón', i?.subBody || gBody || '<p>Contenido</p>', lib); 
+          finalHtml = CD.makeAccordion(i?.label || gTitle || CD.t('dfAccordionTitle'), i?.subBody || gBody || `<p>${CD.t('dfContent')}</p>`, lib); 
         }
         break;
       }
       case 'listgroup': finalHtml = CD.makeListGroup(gItems.length ? gItems.map(i=>i.label) : [gTitle], lib); break;
-      case 'navbar': finalHtml = CD.makeNavBar(gTitle || 'Marca', gItems.map(i=>i.label), lib); break;
+      case 'navbar': finalHtml = CD.makeNavBar(gTitle || CD.t('dfBrand'), gItems.map(i=>i.label), lib); break;
       case 'breadcrumb': finalHtml = CD.makeBreadcrumb(gItems.map(i=>({label:i.label, href:i.href})), lib); break;
       case 'pagination': {
         const pItems = gItems.map(i => {
@@ -425,7 +425,7 @@
       case 'dropdown': {
         finalHtml = gItems.map(i => {
           const opts = getSubLines(i.subBody);
-          return CD.makeDropdown(i.label || 'Menú', opts.length ? opts : ['Opción 1'], lib);
+          return CD.makeDropdown(i.label || CD.t('defaultMenu'), opts.length ? opts : [CD.t('defaultOption')], lib);
         }).join('&nbsp;');
         break;
       }
@@ -489,38 +489,38 @@
     const instItems = getInstantItems();
 
     switch (type) {
-      case 'hero': result = CD.makeHero(title || 'Título', body || 'Subtítulo', lib); break;
-      case 'banner': result = CD.makeBanner(text || 'Texto', lib); break;
-      case 'card': result = CD.makeCard(title || 'Título', body || 'Contenido', lib, ''); break;
-      case 'button': result = CD.makeButton(title || 'Botón', href, lib); break;
-      case 'alert': result = CD.makeAlert(html || text || 'Alerta', 'info', lib); break;
-      case 'badge': result = CD.makeBadge(title || 'Insignia', lib); break;
+      case 'hero': result = CD.makeHero(title || CD.t('dfTitle'), body || CD.t('dfSubtitle'), lib); break;
+      case 'banner': result = CD.makeBanner(text || CD.t('dfBannerText'), lib); break;
+      case 'card': result = CD.makeCard(title || CD.t('dfTitle'), body || CD.t('dfContent'), lib, ''); break;
+      case 'button': result = CD.makeButton(title || CD.t('dfBtnText'), href, lib); break;
+      case 'alert': result = CD.makeAlert(html || text || CD.t('dfAlertText'), 'info', lib); break;
+      case 'badge': result = CD.makeBadge(title || CD.t('dfBadgeText'), lib); break;
       case 'progress': {
         const pctMatch = text.match(/(\d+)\s*%/);
         const pct = pctMatch ? parseInt(pctMatch[1]) : 70;
-        const label = title.replace(/\d+\s*%/, '').trim() || 'Progreso';
+        const label = title.replace(/\d+\s*%/, '').trim() || CD.t('dfProgressLabel');
         result = CD.makeProgress(label, pct, lib);
         break;
       }
-      case 'blockquote': result = CD.makeBlockquote(html || text || 'Cita', '', lib); break;
+      case 'blockquote': result = CD.makeBlockquote(html || text || CD.t('dfQuoteText'), '', lib); break;
       case 'accordion': {
         if (instItems.length > 1 || (instItems.length === 1 && title && instItems[0].label !== title)) {
-          result = instItems.map(i => CD.makeAccordion(i.label || 'Título', i.subBody || '<p>Contenido</p>', lib)).join('');
+          result = instItems.map(i => CD.makeAccordion(i.label || CD.t('dfTitle'), i.subBody || `<p>${CD.t('dfContent')}</p>`, lib)).join('');
         } else {
-          result = CD.makeAccordion(instItems[0]?.label || title || 'Título', instItems[0]?.subBody || body || '<p>Contenido</p>', lib);
+          result = CD.makeAccordion(instItems[0]?.label || title || CD.t('dfTitle'), instItems[0]?.subBody || body || `<p>${CD.t('dfContent')}</p>`, lib);
         }
         break;
       }
       case 'listgroup': result = CD.makeListGroup(instItems.map(i=>i.label), lib); break;
       case 'navbar': {
-        const brand = instItems[0]?.label || 'Marca';
+        const brand = instItems[0]?.label || CD.t('dfBrand');
         const navLinks = instItems.slice(1).map(i=>i.label);
-        result = CD.makeNavBar(brand, navLinks.length ? navLinks : ['Inicio'], lib); 
+        result = CD.makeNavBar(brand, navLinks.length ? navLinks : [CD.t('dfHome')], lib); 
         break;
       }
       case 'breadcrumb': result = CD.makeBreadcrumb(instItems, lib); break;
       case 'pagination': {
-        if (!text.trim() || (instItems.length === 1 && instItems[0].label === 'Texto de ejemplo')) {
+        if (!text.trim() || (instItems.length === 1 && instItems[0].label === CD.t('dfText'))) {
            result = CD.makePagination(2, 5, lib);
         } else {
            const pItems = instItems.map(i => {
@@ -537,7 +537,7 @@
       case 'dropdown': {
         result = instItems.map(i => {
            const opts = getSubLines(i.subBody);
-           return CD.makeDropdown(i.label || 'Menú', opts.length ? opts : ['Opción 1'], lib);
+           return CD.makeDropdown(i.label || CD.t('defaultMenu'), opts.length ? opts : [CD.t('defaultOption')], lib);
         }).join('&nbsp;');
         break;
       }
@@ -552,7 +552,7 @@
       }
       await CD.bridgeCall('REPLACE_SELECTION', { html: result });
       if (!html && ['dropdown', 'card', 'hero', 'accordion'].includes(type)) {
-        setStatus('💡 Tip: Selecciona texto antes de añadir este componente', 'ok');
+        setStatus(CD.t('tipSelectText'), 'ok');
       } else {
         setStatus('✅ ' + CD.t('done'), 'ok');
       }
@@ -564,7 +564,7 @@
   // ── Smart Selection Parsing ───────────────────────────────────────────────
   function parseSmartSelection(html, fallbackText) {
     if (!html) {
-      const t = fallbackText.trim() || 'Texto de ejemplo';
+      const t = fallbackText.trim() || CD.t('dfText');
       return { title: t, body: '', items: [{label: t, href: '#', subBody: ''}], links: [] };
     }
 
@@ -684,7 +684,7 @@
         bodyHtml = clone.innerHTML.trim();
       } else {
         const lines = fallbackText.split('\n').map(s=>s.trim()).filter(Boolean);
-        title = lines[0] || 'Texto de ejemplo';
+        title = lines[0] || CD.t('dfText');
         bodyHtml = lines.slice(1).map(l => `<p>${l}</p>`).join('');
       }
     }

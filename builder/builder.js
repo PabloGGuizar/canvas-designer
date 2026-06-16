@@ -173,13 +173,265 @@ const I18N = {
   es: {
     save: 'Guardar librería', reset: 'Restablecer', preview: 'Vista previa — Página de Canvas',
     tabPalette: '🎨 Paleta', tabTypo: 'Aa Tipografía', tabComp: '⊞ Componentes',
-    sub: 'Constructor de Estilos', saved: '¡Librería guardada!', resetDone: 'Valores restablecidos.'
+    sub: 'Constructor de Estilos', saved: '¡Librería guardada!', resetDone: 'Valores restablecidos.',
+    tplActual: 'Plantilla Actual',
+    saveNew: 'Guardar como nueva',
+    deleteTpl: 'Eliminar plantilla',
+    exportBtn: '⬇️ Exportar',
+    exportTitle: 'Descargar plantilla JSON',
+    importBtn: '⬆️ Importar',
+    importTitle: 'Cargar plantilla JSON',
+    changeTheme: 'Cambiar Tema',
+    headingFont: 'Fuente de títulos',
+    bodyFont: 'Fuente de cuerpo',
+    baseSize: 'Tamaño base',
+    lineHeight: 'Interlineado',
+    compHero: 'Héroe',
+    compBanner: 'Banner',
+    compAlert: 'Alertas',
+    compBadge: 'Insignias (Badges)',
+    compCard: 'Tarjeta',
+    compButton: 'Botón',
+    compDropdown: 'Desplegable',
+    compAccordion: 'Acordeón',
+    compListgroup: 'Lista de grupo',
+    compProgress: 'Barras de progreso',
+    compNavbar: 'Barra de navegación',
+    compBreadcrumb: 'Migas de pan',
+    compPagination: 'Paginación',
+    compBlockquote: 'Cita destacada',
+    compTable: 'Tabla',
+    fieldBackground: 'Fondo',
+    fieldBgImage: 'Imagen de Fondo (URL)',
+    fieldTextColor: 'Color texto',
+    fieldPadding: 'Padding',
+    fieldBorderRadius: 'Border-radius',
+    fieldTextAlignment: 'Alineación texto',
+    fieldTitleSize: 'Tamaño título',
+    fieldSubtitleColor: 'Color subtítulo',
+    fieldSubtitleSize: 'Tamaño subtítulo',
+    fieldBorderLeft: 'Borde izquierdo',
+    fieldFontSize: 'Tamaño fuente',
+    fieldFontWeight: 'Grosor fuente',
+    fieldBorderColor: 'Color borde',
+    fieldBorder: 'Borde',
+    fieldTitleColor: 'Color título',
+    fieldMenuBg: 'Fondo menú',
+    fieldItemColor: 'Color texto ítem',
+    fieldMenuBorderRadius: 'Border-radius menú',
+    fieldSummaryBg: 'Fondo cabecera',
+    fieldSummaryColor: 'Color texto cabecera',
+    fieldContentBg: 'Fondo contenido',
+    fieldContentColor: 'Color texto contenido',
+    fieldEvenBg: 'Fondo ítem par',
+    fieldOddBg: 'Fondo ítem impar',
+    fieldItemPadding: 'Padding ítem',
+    fieldColorFrom: 'Color inicio gradiente',
+    fieldColorTo: 'Color fin gradiente',
+    fieldTrackBg: 'Fondo pista',
+    fieldHeight: 'Altura (px)',
+    fieldBrandColor: 'Color marca',
+    fieldLinkColor: 'Color enlaces',
+    fieldLinkColorSingle: 'Color enlace',
+    fieldSeparatorColor: 'Color separador',
+    fieldActiveColor: 'Color actual',
+    fieldSeparator: 'Separador',
+    fieldActiveBg: 'Fondo activo',
+    fieldActiveTextColor: 'Color texto activo',
+    fieldInactiveBg: 'Fondo inactivo',
+    fieldInactiveTextColor: 'Color texto inactivo',
+    fieldTableHeaderBg: 'Fondo encabezado',
+    fieldTableHeaderColor: 'Color texto encabezado',
+    fieldTableAltRowBg: 'Fila alterna',
+    alignCenter: 'Centro',
+    alignLeft: 'Izquierda',
+    alignRight: 'Derecha',
+    confirmReset: '¿Restablecer al estilo por defecto? Perderás los cambios no guardados.',
+    prHeroTitle: 'Bienvenidos al Módulo 1',
+    prHeroSub: 'Explora los conceptos fundamentales de esta unidad',
+    prBannerText: '📌 Completa todas las actividades antes del viernes.',
+    prAlertInfo: 'Esta es una alerta informativa.',
+    prAlertSucc: 'La actividad fue entregada correctamente.',
+    prAlertWarn: 'La fecha límite vence mañana.',
+    prAlertDang: 'No se pudo procesar tu entrega.',
+    prBadgeNew: 'Nuevo',
+    prBadgeFeatured: 'Destacado',
+    prBadgeSoon: 'Próximamente',
+    prBadgeDone: 'Completado',
+    prCard1Title: '📖 Lectura',
+    prCard1Text: 'Revisa el material de apoyo antes de la sesión.',
+    prCard2Title: '🎥 Video',
+    prCard2Text: 'Mira el video introductorio de 12 minutos.',
+    prCard3Title: '✍️ Tarea',
+    prCard3Text: 'Entrega tu reflexión antes del domingo.',
+    prBtnMain: 'Botón principal',
+    prBtnSec: 'Botón secundario',
+    prOptA: 'Opción A',
+    prOptB: 'Opción B',
+    prOptC: 'Opción C',
+    prSelectMod: 'Seleccionar módulo ▾',
+    prMod1Intro: 'Módulo 1 — Introducción',
+    prMod2Dev: 'Módulo 2 — Desarrollo',
+    prMod3End: 'Módulo 3 — Cierre',
+    prAcc1Title: '¿Cómo entrego la tarea?',
+    prAcc1Body: '<p>Ve a la sección "Tareas" en el menú lateral y sube tu archivo.</p>',
+    prAcc2Title: '¿Puedo entregar después de la fecha límite?',
+    prAcc2Body: '<p>Las entregas tardías tienen una penalización del 20%.</p>',
+    prLg1: '📘 Módulo 1 — Introducción al curso',
+    prLg2: '📗 Módulo 2 — Conceptos fundamentales',
+    prLg3: '📙 Módulo 3 — Aplicación práctica',
+    prLg4: '📕 Módulo 4 — Evaluación final',
+    prProg1: 'Módulo 1 completado',
+    prProg2: 'Módulo 2 en progreso',
+    prProg3: 'Módulo 3 pendiente',
+    prBrandText: '🎓 Mi Curso',
+    prHome: 'Inicio',
+    prModules: 'Módulos',
+    prResources: 'Recursos',
+    prContact: 'Contacto',
+    prLesson3: 'Lección 3',
+    prQuote: '"El aprendizaje no es producto del docente, sino del alumno que actúa con responsabilidad."',
+    prThWeek: 'Semana',
+    prThTopic: 'Tema',
+    prThDeliver: 'Entrega',
+    prTdIntro: 'Introducción',
+    prTdForum: 'Foro inicial',
+    prTdConcepts: 'Conceptos clave',
+    prTdQuiz: 'Cuestionario',
+    prTdApp: 'Aplicación',
+    prTdProject: 'Proyecto'
   },
   en: {
     save: 'Save library', reset: 'Reset', preview: 'Preview — Canvas Page',
     tabPalette: '🎨 Palette', tabTypo: 'Aa Typography', tabComp: '⊞ Components',
-    sub: 'Style Builder', saved: 'Library saved!', resetDone: 'Values reset.'
-  },
+    sub: 'Style Builder', saved: 'Library saved!', resetDone: 'Values reset.',
+    tplActual: 'Current Template',
+    saveNew: 'Save as new',
+    deleteTpl: 'Delete template',
+    exportBtn: '⬇️ Export',
+    exportTitle: 'Download JSON template',
+    importBtn: '⬆️ Import',
+    importTitle: 'Load JSON template',
+    changeTheme: 'Toggle Theme',
+    headingFont: 'Heading font',
+    bodyFont: 'Body font',
+    baseSize: 'Base size',
+    lineHeight: 'Line height',
+    compHero: 'Hero',
+    compBanner: 'Banner',
+    compAlert: 'Alerts',
+    compBadge: 'Badges',
+    compCard: 'Card',
+    compButton: 'Button',
+    compDropdown: 'Dropdown',
+    compAccordion: 'Accordion',
+    compListgroup: 'List Group',
+    compProgress: 'Progress Bars',
+    compNavbar: 'Navigation Bar',
+    compBreadcrumb: 'Breadcrumbs',
+    compPagination: 'Pagination',
+    compBlockquote: 'Featured Quote',
+    compTable: 'Table',
+    fieldBackground: 'Background',
+    fieldBgImage: 'Background Image (URL)',
+    fieldTextColor: 'Text color',
+    fieldPadding: 'Padding',
+    fieldBorderRadius: 'Border radius',
+    fieldTextAlignment: 'Text alignment',
+    fieldTitleSize: 'Title size',
+    fieldSubtitleColor: 'Subtitle color',
+    fieldSubtitleSize: 'Subtitle size',
+    fieldBorderLeft: 'Left border',
+    fieldFontSize: 'Font size',
+    fieldFontWeight: 'Font weight',
+    fieldBorderColor: 'Border color',
+    fieldBorder: 'Border',
+    fieldTitleColor: 'Title color',
+    fieldMenuBg: 'Menu background',
+    fieldItemColor: 'Item text color',
+    fieldMenuBorderRadius: 'Menu border radius',
+    fieldSummaryBg: 'Summary background',
+    fieldSummaryColor: 'Summary text color',
+    fieldContentBg: 'Content background',
+    fieldContentColor: 'Content text color',
+    fieldEvenBg: 'Even item background',
+    fieldOddBg: 'Odd item background',
+    fieldItemPadding: 'Item padding',
+    fieldColorFrom: 'Gradient start color',
+    fieldColorTo: 'Gradient end color',
+    fieldTrackBg: 'Track background',
+    fieldHeight: 'Height (px)',
+    fieldBrandColor: 'Brand color',
+    fieldLinkColor: 'Links color',
+    fieldLinkColorSingle: 'Link color',
+    fieldSeparatorColor: 'Separator color',
+    fieldActiveColor: 'Current color',
+    fieldSeparator: 'Separator',
+    fieldActiveBg: 'Active background',
+    fieldActiveTextColor: 'Active text color',
+    fieldInactiveBg: 'Inactive background',
+    fieldInactiveTextColor: 'Inactive text color',
+    fieldTableHeaderBg: 'Header background',
+    fieldTableHeaderColor: 'Header text color',
+    fieldTableAltRowBg: 'Alternate row',
+    alignCenter: 'Center',
+    alignLeft: 'Left',
+    alignRight: 'Right',
+    confirmReset: 'Reset to default style? You will lose any unsaved changes.',
+    prHeroTitle: 'Welcome to Module 1',
+    prHeroSub: 'Explore the fundamental concepts of this unit',
+    prBannerText: '📌 Complete all activities before Friday.',
+    prAlertInfo: 'This is an informational alert.',
+    prAlertSucc: 'The activity was successfully submitted.',
+    prAlertWarn: 'The deadline is tomorrow.',
+    prAlertDang: 'Your submission could not be processed.',
+    prBadgeNew: 'New',
+    prBadgeFeatured: 'Featured',
+    prBadgeSoon: 'Upcoming',
+    prBadgeDone: 'Completed',
+    prCard1Title: '📖 Reading',
+    prCard1Text: 'Review the support material before the session.',
+    prCard2Title: '🎥 Video',
+    prCard2Text: 'Watch the 12-minute introductory video.',
+    prCard3Title: '✍️ Assignment',
+    prCard3Text: 'Submit your reflection before Sunday.',
+    prBtnMain: 'Primary Button',
+    prBtnSec: 'Secondary Button',
+    prOptA: 'Option A',
+    prOptB: 'Option B',
+    prOptC: 'Option C',
+    prSelectMod: 'Select module ▾',
+    prMod1Intro: 'Module 1 — Introduction',
+    prMod2Dev: 'Module 2 — Development',
+    prMod3End: 'Module 3 — Closing',
+    prAcc1Title: 'How do I submit the assignment?',
+    prAcc1Body: '<p>Go to the "Assignments" section in the side menu and upload your file.</p>',
+    prAcc2Title: 'Can I submit after the deadline?',
+    prAcc2Body: '<p>Late submissions have a 20% penalty.</p>',
+    prLg1: '📘 Module 1 — Introduction to the course',
+    prLg2: '📗 Module 2 — Fundamental concepts',
+    prLg3: '📙 Module 3 — Practical application',
+    prLg4: '📕 Module 4 — Final evaluation',
+    prProg1: 'Module 1 completed',
+    prProg2: 'Module 2 in progress',
+    prProg3: 'Module 3 pending',
+    prBrandText: '🎓 My Course',
+    prHome: 'Home',
+    prModules: 'Modules',
+    prResources: 'Resources',
+    prContact: 'Contact',
+    prLesson3: 'Lesson 3',
+    prQuote: '"Learning is not a product of teaching, but of the learner acting responsibly."',
+    prThWeek: 'Week',
+    prThTopic: 'Topic',
+    prThDeliver: 'Submission',
+    prTdIntro: 'Introduction',
+    prTdForum: 'Initial forum',
+    prTdConcepts: 'Key concepts',
+    prTdQuiz: 'Quiz',
+    prTdApp: 'Application',
+    prTdProject: 'Project'
+  }
 };
 
 let lang = 'es';
@@ -190,7 +442,7 @@ let lib = JSON.parse(JSON.stringify(DEFAULT));
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function css(o) {
-  return Object.entries(o).filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}:${v}`).join(';');
+  return Object.entries(o).filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';');
 }
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function deep(o) { return JSON.parse(JSON.stringify(o)); }
@@ -377,7 +629,7 @@ function renderPreview() {
     'background': a.summaryBackground, 'color': a.summaryColor, 'padding': a.summaryPadding,
     'font-weight': a.fontWeight, 'font-family': ty.headingFont, 'cursor': 'pointer', 'display': 'block',
   });
-  const summaryBodyStyle = css({ 'background': a.contentBackground, 'padding': a.contentPadding, 'font-family': ty.bodyFont });
+  const summaryBodyStyle = css({ 'background': a.contentBackground, 'color': a.contentColor || pl.text, 'padding': a.contentPadding, 'font-family': ty.bodyFont });
 
   const bqStyle = css({
     'border-left': bq.borderLeft, 'background': bq.background, 'color': bq.color,
@@ -387,8 +639,8 @@ function renderPreview() {
 
   const tableStyle = css({ 'width': '100%', 'border-collapse': 'collapse', 'font-family': ty.bodyFont, 'font-size': '0.9em', 'margin-bottom': '24px' });
   const thStyle = css({ 'background': tb.headerBackground, 'color': tb.headerColor, 'padding': tb.cellPadding, 'text-align': 'left', 'font-weight': '600', 'border': tb.border });
-  const tdStyle = css({ 'padding': tb.cellPadding, 'border': tb.border, 'background': tb.rowBackground });
-  const tdAltStyle = css({ 'padding': tb.cellPadding, 'border': tb.border, 'background': tb.altRowBackground });
+  const tdStyle = css({ 'padding': tb.cellPadding, 'border': tb.border, 'background': tb.rowBackground, 'color': pl.text });
+  const tdAltStyle = css({ 'padding': tb.cellPadding, 'border': tb.border, 'background': tb.altRowBackground, 'color': pl.text });
 
   const h2Style = css({ 'color': pl.text, 'font-family': ty.headingFont, 'font-size': '1.5em', 'margin': '0 0 16px', 'font-weight': '700' });
   const h3Style = css({ 'color': pl.text, 'font-family': ty.headingFont, 'font-size': '1.15em', 'margin': '0 0 12px', 'font-weight': '600' });
@@ -417,9 +669,9 @@ function renderPreview() {
   const dropDetails = css({ display: 'inline-block', position: 'relative', margin: '8px 0' });
   const dropSummary = css({ background: bt.background, color: bt.color, 'border-radius': bt.borderRadius, padding: bt.padding, 'font-size': bt.fontSize, 'font-weight': bt.fontWeight, 'font-family': ty.bodyFont, cursor: 'pointer', 'list-style': 'none', display: 'inline-block' });
   const dropMenu = css({ background: dd.menuBackground, border: '1px solid #e2e8f0', 'border-radius': dd.borderRadius, margin: '4px 0', overflow: 'hidden', 'min-width': '160px' });
-  const dropItem = css({ display: 'block', padding: '9px 16px', color: dd.itemColor, 'text-decoration': 'none', 'font-family': ty.bodyFont, 'font-size': '0.9em', 'border-bottom': '1px solid #f1f5f9' });
+  const dropItem = css({ display: 'block', padding: '9px 16px', color: dd.itemColor || pl.text || '#1e293b', 'text-decoration': 'none', 'font-family': ty.bodyFont, 'font-size': '0.9em', 'border-bottom': '1px solid #f1f5f9' });
   const lgStyle = css({ 'list-style': 'none', padding: '0', margin: '12px 0', border: '1px solid #e2e8f0', 'border-radius': lg.borderRadius, overflow: 'hidden' });
-  const lgItem = (alt) => css({ padding: lg.padding, 'border-bottom': '1px solid #f1f5f9', background: alt ? lg.oddBackground : lg.evenBackground, 'font-family': ty.bodyFont, color: lg.color, 'font-size': '0.95em' });
+  const lgItem = (alt) => css({ padding: lg.padding, 'border-bottom': '1px solid #f1f5f9', background: alt ? lg.oddBackground : lg.evenBackground, 'font-family': ty.bodyFont, color: lg.color || pl.text || '#111827', 'font-size': '0.95em' });
   const navStyle = css({ background: nb.background || pl.primary, 'border-radius': nb.borderRadius, padding: nb.padding, display: 'flex', 'align-items': 'center', gap: '8px', margin: '16px 0', 'flex-wrap': 'wrap' });
   const navBrand = css({ color: nb.brandColor || '#fff', 'font-weight': '700', 'font-size': '1.05em', 'text-decoration': 'none', 'font-family': ty.headingFont, 'margin-right': 'auto' });
   const navLink = css({ color: nb.linkColor || 'rgba(255,255,255,0.8)', 'text-decoration': 'none', 'font-size': '0.9em', 'font-family': ty.bodyFont, padding: '4px 10px', 'border-radius': '6px' });
@@ -433,86 +685,86 @@ function renderPreview() {
 
   const html = `<div style="${pageStyle}">
 
-  <h2 style="${h2Style}">① Héroe</h2>
+  <h2 style="${h2Style}">① ${t('compHero')}</h2>
   <div style="${heroStyle};${heroBgStyle}">
     <div style="${heroInnerStyle}">
-      <h2 style="${heroTitleStyle}">Bienvenidos al Módulo 1</h2>
-      <p style="${heroSubStyle}">Explora los conceptos fundamentales de esta unidad</p>
+      <h2 style="${heroTitleStyle}">${t('prHeroTitle')}</h2>
+      <p style="${heroSubStyle}">${t('prHeroSub')}</p>
     </div>
   </div>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">② Banner</h2>
-  <div style="${bannerStyle}"><p style="margin:0">📌 Completa todas las actividades antes del viernes.</p></div>
+  <h2 style="${h2Style}">② ${t('compBanner')}</h2>
+  <div style="${bannerStyle}"><p style="margin:0">${t('prBannerText')}</p></div>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">③ Alertas</h2>
-  <div style="${alertInfoStyle}"><strong>ℹ️ Info:</strong> Esta es una alerta informativa.</div>
-  <div style="${alertSuccStyle}"><strong>✅ Éxito:</strong> La actividad fue entregada correctamente.</div>
-  <div style="${alertWarnStyle}"><strong>⚠️ Aviso:</strong> La fecha límite vence mañana.</div>
-  <div style="${alertDangStyle}"><strong>🚫 Error:</strong> No se pudo procesar tu entrega.</div>
+  <h2 style="${h2Style}">③ ${t('compAlert')}</h2>
+  <div style="${alertInfoStyle}"><strong>ℹ️ Info:</strong> ${t('prAlertInfo')}</div>
+  <div style="${alertSuccStyle}"><strong>✅ ${t('alignCenter')}:</strong> ${t('prAlertSucc')}</div>
+  <div style="${alertWarnStyle}"><strong>⚠️ ${t('compAlert')}:</strong> ${t('prAlertWarn')}</div>
+  <div style="${alertDangStyle}"><strong>🚫 Error:</strong> ${t('prAlertDang')}</div>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">④ Insignias (Badges)</h2>
-  <p><span style="${badgeStyle}">Nuevo</span> <span style="${badge2Style}">Destacado</span> <span style="${badge3Style}">Próximamente</span> <span style="${badge4Style}">Completado</span></p>
+  <h2 style="${h2Style}">④ ${t('compBadge')}</h2>
+  <p><span style="${badgeStyle}">${t('prBadgeNew')}</span> <span style="${badge2Style}">${t('prBadgeFeatured')}</span> <span style="${badge3Style}">${t('prBadgeSoon')}</span> <span style="${badge4Style}">${t('prBadgeDone')}</span></p>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑤ Tarjetas (Cards)</h2>
+  <h2 style="${h2Style}">⑤ ${t('compCard')}</h2>
   <div style="${gridStyle}">
-    <div style="${cardStyle}">${imgHtml1}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">📖 Lectura</h3><p style="${cardTextStyle}">Revisa el material de apoyo antes de la sesión.</p></div></div>
-    <div style="${cardStyle}">${imgHtml2}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">🎥 Video</h3><p style="${cardTextStyle}">Mira el video introductorio de 12 minutos.</p></div></div>
-    <div style="${cardStyle}">${imgHtml3}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">✍️ Tarea</h3><p style="${cardTextStyle}">Entrega tu reflexión antes del domingo.</p></div></div>
+    <div style="${cardStyle}">${imgHtml1}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">${t('prCard1Title')}</h3><p style="${cardTextStyle}">${t('prCard1Text')}</p></div></div>
+    <div style="${cardStyle}">${imgHtml2}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">${t('prCard2Title')}</h3><p style="${cardTextStyle}">${t('prCard2Text')}</p></div></div>
+    <div style="${cardStyle}">${imgHtml3}<div style="${cardInnerStyle}"><h3 style="${cardTitleStyle}">${t('prCard3Title')}</h3><p style="${cardTextStyle}">${t('prCard3Text')}</p></div></div>
   </div>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑥ Botones y Grupo de Botones</h2>
+  <h2 style="${h2Style}">⑥ ${t('compButton')}</h2>
   <p style="margin-bottom:12px">
-    <a href="#" style="${btnStyle}">Botón principal</a>
+    <a href="#" style="${btnStyle}">${t('prBtnMain')}</a>
     &nbsp;
-    <a href="#" style="${css({ background: 'transparent', color: bt.background, 'border-radius': bt.borderRadius, padding: bt.padding, 'font-size': bt.fontSize, 'font-weight': bt.fontWeight, 'text-decoration': 'none', display: 'inline-block', 'font-family': ty.bodyFont, border: `2px solid ${bt.background}` })}">Botón secundario</a>
+    <a href="#" style="${css({ background: 'transparent', color: bt.background, 'border-radius': bt.borderRadius, padding: bt.padding, 'font-size': bt.fontSize, 'font-weight': bt.fontWeight, 'text-decoration': 'none', display: 'inline-block', 'font-family': ty.bodyFont, border: `2px solid ${bt.background}` })}">${t('prBtnSec')}</a>
   </p>
   <p>
     <div style="${btnGrpWrap}">
-      <a href="#" style="${btnGrpItem(false)}">Opción A</a>
-      <a href="#" style="${btnGrpItem(true)}">Opción B</a>
-      <a href="#" style="${btnGrpItem(true)}">Opción C</a>
+      <a href="#" style="${btnGrpItem(false)}">${t('prOptA')}</a>
+      <a href="#" style="${btnGrpItem(true)}">${t('prOptB')}</a>
+      <a href="#" style="${btnGrpItem(true)}">${t('prOptC')}</a>
     </div>
   </p>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑦ Desplegable (Dropdown)</h2>
+  <h2 style="${h2Style}">⑦ ${t('compDropdown')}</h2>
   <details style="${dropDetails}">
-    <summary style="${dropSummary}">Seleccionar módulo ▾</summary>
+    <summary style="${dropSummary}">${t('prSelectMod')}</summary>
     <div style="${dropMenu}">
-      <a href="#" style="${dropItem}">Módulo 1 — Introducción</a>
-      <a href="#" style="${dropItem}">Módulo 2 — Desarrollo</a>
-      <a href="#" style="${dropItem}">Módulo 3 — Cierre</a>
+      <a href="#" style="${dropItem}">${t('prMod1Intro')}</a>
+      <a href="#" style="${dropItem}">${t('prMod2Dev')}</a>
+      <a href="#" style="${dropItem}">${t('prMod3End')}</a>
     </div>
   </details>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑧ Acordeón</h2>
+  <h2 style="${h2Style}">⑧ ${t('compAccordion')}</h2>
   <details style="${detailsStyle}" open>
-    <summary style="${summaryStyle}">¿Cómo entrego la tarea?</summary>
-    <div style="${summaryBodyStyle}"><p>Ve a la sección "Tareas" en el menú lateral y sube tu archivo.</p></div>
+    <summary style="${summaryStyle}">${t('prAcc1Title')}</summary>
+    <div style="${summaryBodyStyle}">${t('prAcc1Body')}</div>
   </details>
   <details style="${detailsStyle}">
-    <summary style="${summaryStyle}">¿Puedo entregar después de la fecha límite?</summary>
-    <div style="${summaryBodyStyle}"><p>Las entregas tardías tienen una penalización del 20%.</p></div>
+    <summary style="${summaryStyle}">${t('prAcc2Title')}</summary>
+    <div style="${summaryBodyStyle}">${t('prAcc2Body')}</div>
   </details>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑨ Lista de grupo</h2>
+  <h2 style="${h2Style}">⑨ ${t('compListgroup')}</h2>
   <ul style="${lgStyle}">
-    <li style="${lgItem(false)}">📘 Módulo 1 — Introducción al curso</li>
-    <li style="${lgItem(true)}">📗 Módulo 2 — Conceptos fundamentales</li>
-    <li style="${lgItem(false)}">📙 Módulo 3 — Aplicación práctica</li>
-    <li style="${lgItem(true)}">📕 Módulo 4 — Evaluación final</li>
+    <li style="${lgItem(false)}">${t('prLg1')}</li>
+    <li style="${lgItem(true)}">${t('prLg2')}</li>
+    <li style="${lgItem(false)}">${t('prLg3')}</li>
+    <li style="${lgItem(true)}">${t('prLg4')}</li>
   </ul>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑩ Barras de progreso</h2>
-  ${['Módulo 1 completado:100', 'Módulo 2 en progreso:60', 'Módulo 3 pendiente:0'].map(s => {
+  <h2 style="${h2Style}">⑩ ${t('compProgress')}</h2>
+  ${[`${t('prProg1')}:100`, `${t('prProg2')}:60`, `${t('prProg3')}:0`].map(s => {
     const [lbl, p] = s.split(':');
     const pct = parseInt(p);
     const trackStyle2 = `background:${pr.trackBackground};border-radius:${pr.borderRadius};height:${pr.height};overflow:hidden;width:100%`;
@@ -521,27 +773,27 @@ function renderPreview() {
   }).join('')}
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑪ Barra de navegación</h2>
+  <h2 style="${h2Style}">⑪ ${t('compNavbar')}</h2>
   <nav style="${navStyle}">
-    <a href="#" style="${navBrand}">🎓 Mi Curso</a>
-    <a href="#" style="${navLink}">Inicio</a>
-    <a href="#" style="${navLink}">Módulos</a>
-    <a href="#" style="${navLink}">Recursos</a>
-    <a href="#" style="${navLink}">Contacto</a>
+    <a href="#" style="${navBrand}">${t('prBrandText')}</a>
+    <a href="#" style="${navLink}">${t('prHome')}</a>
+    <a href="#" style="${navLink}">${t('compPagination')}</a>
+    <a href="#" style="${navLink}">${t('prResources')}</a>
+    <a href="#" style="${navLink}">${t('prContact')}</a>
   </nav>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑫ Migas de pan (Breadcrumbs)</h2>
+  <h2 style="${h2Style}">⑫ ${t('compBreadcrumb')}</h2>
   <nav style="${breadStyle}">
-    <a href="#" style="${breadLink}">Inicio</a>
+    <a href="#" style="${breadLink}">${t('prHome')}</a>
     <span style="${breadSep}"> ${bc.separator} </span>
-    <a href="#" style="${breadLink}">Módulo 2</a>
+    <a href="#" style="${breadLink}">${t('prLg2').replace(/^[^\s]+\s*/, '')}</a>
     <span style="${breadSep}"> ${bc.separator} </span>
-    <span style="color:${bc.activeColor};font-weight:600">Lección 3</span>
+    <span style="color:${bc.activeColor || pl.text};font-weight:600">${t('prLesson3')}</span>
   </nav>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑬ Paginación</h2>
+  <h2 style="${h2Style}">⑬ ${t('compPagination')}</h2>
   <nav style="${pgNav}">
     <a href="#" style="${pgInactive}">‹</a>
     <a href="#" style="${pgInactive}">1</a>
@@ -552,22 +804,22 @@ function renderPreview() {
   </nav>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑭ Cita destacada</h2>
+  <h2 style="${h2Style}">⑭ ${t('compBlockquote')}</h2>
   <blockquote style="${bqStyle}">
-    <p style="margin:0">"El aprendizaje no es producto del docente, sino del alumno que actúa con responsabilidad."</p>
+    <p style="margin:0">${t('prQuote')}</p>
     <cite style="display:block;font-style:normal;font-weight:600;margin-top:8px;font-size:0.85em;color:${pl.textLight}">— John Dewey</cite>
   </blockquote>
 
   <hr style="${dividerStyle}">
-  <h2 style="${h2Style}">⑮ Tabla</h2>
+  <h2 style="${h2Style}">⑮ ${t('compTable')}</h2>
   <table style="${tableStyle}">
     <thead><tr>
-      <th style="${thStyle}">Semana</th><th style="${thStyle}">Tema</th><th style="${thStyle}">Entrega</th>
+      <th style="${thStyle}">${t('prThWeek')}</th><th style="${thStyle}">${t('prThTopic')}</th><th style="${thStyle}">${t('prThDeliver')}</th>
     </tr></thead>
     <tbody>
-      <tr><td style="${tdStyle}">1</td><td style="${tdStyle}">Introducción</td><td style="${tdStyle}">Foro inicial</td></tr>
-      <tr><td style="${tdAltStyle}">2</td><td style="${tdAltStyle}">Conceptos clave</td><td style="${tdAltStyle}">Cuestionario</td></tr>
-      <tr><td style="${tdStyle}">3</td><td style="${tdStyle}">Aplicación</td><td style="${tdStyle}">Proyecto</td></tr>
+      <tr><td style="${tdStyle}">1</td><td style="${tdStyle}">${t('prTdIntro')}</td><td style="${tdStyle}">${t('prTdForum')}</td></tr>
+      <tr><td style="${tdAltStyle}">2</td><td style="${tdAltStyle}">${t('prTdConcepts')}</td><td style="${tdAltStyle}">${t('prTdQuiz')}</td></tr>
+      <tr><td style="${tdStyle}">3</td><td style="${tdStyle}">${t('prTdApp')}</td><td style="${tdStyle}">${t('prTdProject')}</td></tr>
     </tbody>
   </table>
 
@@ -597,10 +849,11 @@ function bindControls() {
       const display = document.getElementById(`val-${section === 'typography' ? key : section + '-' + key}`);
       if (display) display.textContent = lib[section][key] || numVal;
     } else {
-      el.value = lib[section]?.[key] ?? '';
+      el.value = lib[section]?.[key] ?? DEFAULT[section]?.[key] ?? '';
     }
 
     el.addEventListener('input', () => {
+      if (!lib[section]) lib[section] = {};
       if (el.type === 'range') {
         const unit = key === 'lineHeight' ? '' : 'px';
         lib[section][key] = el.value + unit;
@@ -625,11 +878,12 @@ function bindControls() {
     const key = parts.slice(1).join('-').replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
     const setColor = (val) => {
-      if (lib[section]) lib[section][key] = val;
+      if (!lib[section]) lib[section] = {};
+      lib[section][key] = val;
       renderPreview();
     };
 
-    const initVal = lib[section]?.[key] || '#ffffff';
+    const initVal = lib[section]?.[key] || DEFAULT[section]?.[key] || '#ffffff';
     if (/^#[0-9a-fA-F]{6}$/i.test(initVal.trim())) {
       picker.value = initVal.trim();
     }
@@ -718,10 +972,121 @@ function applyLang() {
   document.getElementById('btn-reset').textContent = `↺ ${t('reset')}`;
   document.getElementById('lbl-preview').textContent = t('preview');
   document.getElementById('hdr-sub').textContent = t('sub');
+
+  // Translate all elements with data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const translation = t(key);
+    if (translation !== key) {
+      el.textContent = translation;
+    }
+  });
+
+  // Translate all elements with data-i18n-title attribute
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.dataset.i18nTitle;
+    const translation = t(key);
+    if (translation !== key) {
+      el.title = translation;
+    }
+  });
+}
+
+function translatePageOnStart() {
+  const dictionaryMap = {
+    'Plantilla Actual': 'tplActual',
+    'Guardar como nueva': 'saveNew',
+    'Eliminar plantilla': 'deleteTpl',
+    '⬇️ Exportar': 'exportBtn',
+    'Descargar plantilla JSON': 'exportTitle',
+    '⬆️ Importar': 'importBtn',
+    'Cargar plantilla JSON': 'importTitle',
+    'Cambiar Tema': 'changeTheme',
+    'Fuente de títulos': 'headingFont',
+    'Fuente de cuerpo': 'bodyFont',
+    'Tamaño base': 'baseSize',
+    'Interlineado': 'lineHeight',
+    'Héroe': 'compHero',
+    'Banner': 'compBanner',
+    'Alertas': 'compAlert',
+    'Insignias (Badges)': 'compBadge',
+    'Tarjeta': 'compCard',
+    'Botón': 'compButton',
+    'Desplegable': 'compDropdown',
+    'Acordeón': 'compAccordion',
+    'Lista de grupo': 'compListgroup',
+    'Barras de progreso': 'compProgress',
+    'Barra de navegación': 'compNavbar',
+    'Migas de pan': 'compBreadcrumb',
+    'Paginación': 'compPagination',
+    'Cita destacada': 'compBlockquote',
+    'Tabla': 'compTable',
+    'Fondo': 'fieldBackground',
+    'Imagen de Fondo (URL)': 'fieldBgImage',
+    'Color texto': 'fieldTextColor',
+    'Padding': 'fieldPadding',
+    'Border-radius': 'fieldBorderRadius',
+    'Alineación texto': 'fieldTextAlignment',
+    'Tamaño título': 'fieldTitleSize',
+    'Color subtítulo': 'fieldSubtitleColor',
+    'Tamaño subtítulo': 'fieldSubtitleSize',
+    'Borde izquierdo': 'fieldBorderLeft',
+    'Tamaño fuente': 'fieldFontSize',
+    'Grosor fuente': 'fieldFontWeight',
+    'Color borde': 'fieldBorderColor',
+    'Borde': 'fieldBorder',
+    'Color título': 'fieldTitleColor',
+    'Fondo menú': 'fieldMenuBg',
+    'Color texto ítem': 'fieldItemColor',
+    'Border-radius menú': 'fieldMenuBorderRadius',
+    'Fondo cabecera': 'fieldSummaryBg',
+    'Color texto cabecera': 'fieldSummaryColor',
+    'Fondo contenido': 'fieldContentBg',
+    'Color texto contenido': 'fieldContentColor',
+    'Fondo ítem par': 'fieldEvenBg',
+    'Fondo ítem impar': 'fieldOddBg',
+    'Padding ítem': 'fieldItemPadding',
+    'Color inicio gradiente': 'fieldColorFrom',
+    'Color fin gradiente': 'fieldColorTo',
+    'Fondo pista': 'fieldTrackBg',
+    'Altura (px)': 'fieldHeight',
+    'Color marca': 'fieldBrandColor',
+    'Color enlaces': 'fieldLinkColor',
+    'Color enlace': 'fieldLinkColorSingle',
+    'Color separador': 'fieldSeparatorColor',
+    'Color actual': 'fieldActiveColor',
+    'Separador': 'fieldSeparator',
+    'Fondo activo': 'fieldActiveBg',
+    'Color texto activo': 'fieldActiveTextColor',
+    'Fondo inactivo': 'fieldInactiveBg',
+    'Color texto inactivo': 'fieldInactiveTextColor',
+    'Fondo encabezado': 'fieldTableHeaderBg',
+    'Color texto encabezado': 'fieldTableHeaderColor',
+    'Fila alterna': 'fieldTableAltRowBg',
+    'Centro': 'alignCenter',
+    'Izquierda': 'alignLeft',
+    'Derecha': 'alignRight'
+  };
+
+  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, null, false);
+  while(walk.nextNode()) {
+    const el = walk.currentNode;
+    if (el.children.length === 0 || el.tagName === 'OPTION' || el.tagName === 'SPAN') {
+      const txt = el.textContent.trim();
+      if (dictionaryMap[txt]) {
+        el.dataset.i18n = dictionaryMap[txt];
+      }
+    }
+    const title = el.getAttribute('title');
+    if (title && dictionaryMap[title.trim()]) {
+      el.dataset.i18nTitle = dictionaryMap[title.trim()];
+    }
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function init() {
+  translatePageOnStart();
   const settings = await new Promise(res =>
     chrome.runtime.sendMessage({ type: 'GET_SETTINGS' }, r => res(r?.settings || {}))
   );
@@ -740,6 +1105,19 @@ async function init() {
       await saveLib();
     }
   }
+
+  // Patch to fix colors if corrupted to white on white background due to previous bug
+  const fixCorruptedColor = (obj, key, bgKey, fallback) => {
+    if (obj && obj[key] === '#ffffff' && obj[bgKey] === '#ffffff') obj[key] = fallback;
+  };
+  templates.forEach(t => {
+    fixCorruptedColor(t.lib?.listgroup, 'color', 'evenBackground', '#1e293b');
+    fixCorruptedColor(t.lib?.dropdown, 'itemColor', 'menuBackground', '#1e293b');
+    fixCorruptedColor(t.lib?.accordion, 'contentColor', 'contentBackground', '#4b5563');
+  });
+  fixCorruptedColor(lib?.listgroup, 'color', 'evenBackground', '#1e293b');
+  fixCorruptedColor(lib?.dropdown, 'itemColor', 'menuBackground', '#1e293b');
+  fixCorruptedColor(lib?.accordion, 'contentColor', 'contentBackground', '#4b5563');
 
   if (templates.length === 0 || (templates.length === 1 && templates[0].id === 'default')) {
     templates = []; // Clear array
@@ -777,7 +1155,7 @@ async function init() {
   });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
-    if (confirm('¿Restablecer al estilo por defecto? Perderás los cambios no guardados.')) {
+    if (confirm(t('confirmReset'))) {
       lib = JSON.parse(JSON.stringify(DEFAULT));
       document.getElementById('ctrl-template-select').value = 'default';
       currentTemplateId = null;

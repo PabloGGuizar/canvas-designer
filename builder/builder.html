@@ -21,18 +21,18 @@
     <div class="header-actions">
       <!-- Template Manager -->
       <select id="ctrl-template-select" class="ctrl-select" style="max-width: 150px; margin-right: 4px;">
-        <option value="default">Plantilla Actual</option>
+        <option value="default" data-i18n="tplActual">Plantilla Actual</option>
       </select>
-      <button class="btn btn-ghost btn-sm" id="btn-save-as" title="Guardar como nueva">➕</button>
-      <button class="btn btn-ghost btn-sm" id="btn-delete-tpl" title="Eliminar plantilla" style="display:none; color:#ef4444;">🗑️</button>
+      <button class="btn btn-ghost btn-sm" id="btn-save-as" data-i18n-title="saveNew" title="Guardar como nueva">➕</button>
+      <button class="btn btn-ghost btn-sm" id="btn-delete-tpl" data-i18n-title="deleteTpl" title="Eliminar plantilla" style="display:none; color:#ef4444;">🗑️</button>
       
       <!-- Import / Export -->
-      <button class="btn btn-secondary btn-sm" id="btn-export" title="Descargar plantilla JSON">⬇️ Exportar</button>
-      <button class="btn btn-secondary btn-sm" id="btn-import" title="Cargar plantilla JSON">⬆️ Importar</button>
+      <button class="btn btn-secondary btn-sm" id="btn-export" data-i18n-title="exportTitle" data-i18n="exportBtn" title="Descargar plantilla JSON">⬇️ Exportar</button>
+      <button class="btn btn-secondary btn-sm" id="btn-import" data-i18n-title="importTitle" data-i18n="importBtn" title="Cargar plantilla JSON">⬆️ Importar</button>
       <input type="file" id="file-import" accept=".json" style="display:none;">
       
       <!-- Basics -->
-      <button class="btn btn-ghost btn-sm" id="btn-theme" title="Cambiar Tema" style="margin-left:8px;">☀️</button>
+      <button class="btn btn-ghost btn-sm" id="btn-theme" data-i18n-title="changeTheme" title="Cambiar Tema" style="margin-left:8px;">☀️</button>
       <button class="btn btn-ghost btn-sm" id="btn-lang">🌐 EN</button>
       <button class="btn btn-secondary btn-sm" id="btn-reset">↺ Reset</button>
       <button class="btn btn-primary btn-sm" id="btn-save">💾 <span id="lbl-save">Guardar librería</span></button>
@@ -72,7 +72,7 @@
         <!-- TYPOGRAPHY TAB -->
         <div class="ctrl-pane" id="pane-typography">
           <div class="field">
-            <div class="field-label"><span id="lbl-headingFont">Fuente de títulos</span></div>
+            <div class="field-label"><span id="lbl-headingFont" data-i18n="headingFont">Fuente de títulos</span></div>
             <select class="ctrl-select" id="ctrl-typography-headingFont">
               <option value="Georgia, serif">Georgia (Serif)</option>
               <option value="'Times New Roman', serif">Times New Roman</option>
@@ -86,7 +86,7 @@
             </select>
           </div>
           <div class="field">
-            <div class="field-label"><span id="lbl-bodyFont">Fuente de cuerpo</span></div>
+            <div class="field-label"><span id="lbl-bodyFont" data-i18n="bodyFont">Fuente de cuerpo</span></div>
             <select class="ctrl-select" id="ctrl-typography-bodyFont">
               <option value="system-ui, Arial, sans-serif">System UI (Sans)</option>
               <option value="Arial, sans-serif">Arial</option>
@@ -98,11 +98,11 @@
             </select>
           </div>
           <div class="field">
-            <div class="field-label"><span id="lbl-baseSize">Tamaño base</span> <span id="val-baseSize">16px</span></div>
+            <div class="field-label"><span id="lbl-baseSize" data-i18n="baseSize">Tamaño base</span> <span id="val-baseSize">16px</span></div>
             <input type="range" id="ctrl-typography-baseSize-range" min="13" max="20" value="16">
           </div>
           <div class="field">
-            <div class="field-label"><span id="lbl-lineHeight">Interlineado</span> <span id="val-lineHeight">1.6</span></div>
+            <div class="field-label"><span id="lbl-lineHeight" data-i18n="lineHeight">Interlineado</span> <span id="val-lineHeight">1.6</span></div>
             <input type="range" id="ctrl-typography-lineHeight-range" min="1.2" max="2.2" step="0.1" value="1.6">
           </div>
         </div>

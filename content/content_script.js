@@ -18,6 +18,51 @@ const i18n = {
     aiThinking: 'La IA está procesando…', aiError: 'Error al contactar la IA.',
     noEditor: 'Editor no detectado.', libLoaded: 'Librería activa',
     libEmpty: 'Sin librería guardada', done: '¡Listo!',
+    editTitle: 'Editar',
+    backBtn: 'Regresar',
+    cancelBtn: 'Cancelar',
+    insertBtn: 'Insertar',
+    pctLabel: 'Porcentaje (0-100)',
+    labelField: 'Etiqueta',
+    bodyField: 'Cuerpo / Descripción',
+    titleField: 'Título / Texto',
+    quoteField: 'Cita / Texto',
+    authorField: 'Autor / Fuente (Opcional)',
+    imageField: 'URL de Imagen (Opcional)',
+    textField: 'Texto',
+    hrefField: 'Enlace URL',
+    genTitleField: 'Título General (opcional)',
+    brandField: 'Marca / Título',
+    itemsField: 'Elementos',
+    addItemBtn: '+ Añadir Ítem',
+    itemStyles: '⚙️ Estilos de este elemento',
+    defaultMenu: 'Menú',
+    defaultOption: 'Opción 1',
+    newItem: 'Nuevo Ítem',
+    removeBtn: 'Eliminar',
+    placeholderTitle: 'Título',
+    placeholderBody: 'Cuerpo / Opciones',
+    placeholderImage: 'URL de Imagen (Opcional)',
+    placeholderHref: 'URL',
+    previewPlaceholder: 'Vista previa...',
+    tipSelectText: '💡 Tip: Selecciona texto antes de añadir este componente',
+    
+    // Component defaults
+    dfText: 'Texto de ejemplo',
+    dfTitle: 'Título',
+    dfSubtitle: 'Subtítulo',
+    dfBannerText: 'Texto',
+    dfContent: 'Contenido',
+    dfBtnText: 'Botón',
+    dfAlertText: 'Alerta',
+    dfBadgeText: 'Insignia',
+    dfProgressLabel: 'Progreso',
+    dfQuoteText: 'Cita',
+    dfBrand: 'Marca',
+    dfHome: 'Inicio',
+    dfHeroTitle: 'Título del Héroe',
+    dfQuoteHighlight: 'Texto destacado para la cita',
+    dfAccordionTitle: 'Título del acordeón'
   },
   en: {
     hint: 'Select text and choose a transformation:',
@@ -35,6 +80,51 @@ const i18n = {
     aiThinking: 'AI is processing…', aiError: 'Error contacting AI.',
     noEditor: 'Editor not detected.', libLoaded: 'Library active',
     libEmpty: 'No saved library', done: 'Done!',
+    editTitle: 'Edit',
+    backBtn: 'Go Back',
+    cancelBtn: 'Cancel',
+    insertBtn: 'Insert',
+    pctLabel: 'Percentage (0-100)',
+    labelField: 'Label',
+    bodyField: 'Body / Description',
+    titleField: 'Title / Text',
+    quoteField: 'Quote / Text',
+    authorField: 'Author / Source (Optional)',
+    imageField: 'Image URL (Optional)',
+    textField: 'Text',
+    hrefField: 'URL Link',
+    genTitleField: 'General Title (Optional)',
+    brandField: 'Brand / Title',
+    itemsField: 'Items',
+    addItemBtn: '+ Add Item',
+    itemStyles: '⚙️ Styles of this element',
+    defaultMenu: 'Menu',
+    defaultOption: 'Option 1',
+    newItem: 'New Item',
+    removeBtn: 'Remove',
+    placeholderTitle: 'Title',
+    placeholderBody: 'Body / Options',
+    placeholderImage: 'Image URL (Optional)',
+    placeholderHref: 'URL',
+    previewPlaceholder: 'Preview...',
+    tipSelectText: '💡 Tip: Select text before adding this component',
+    
+    // Component defaults
+    dfText: 'Example text',
+    dfTitle: 'Title',
+    dfSubtitle: 'Subtitle',
+    dfBannerText: 'Text',
+    dfContent: 'Content',
+    dfBtnText: 'Button',
+    dfAlertText: 'Alert',
+    dfBadgeText: 'Badge',
+    dfProgressLabel: 'Progress',
+    dfQuoteText: 'Quote',
+    dfBrand: 'Brand',
+    dfHome: 'Home',
+    dfHeroTitle: 'Hero Title',
+    dfQuoteHighlight: 'Highlighted quote text',
+    dfAccordionTitle: 'Accordion Title'
   }
 };
 
@@ -79,7 +169,7 @@ function injectBridge() {
 }
 
 // ── CSS helpers ───────────────────────────────────────────────────────────────
-function css(o) { return Object.entries(o).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${k}:${v}`).join(';'); }
+function css(o) { return Object.entries(o).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${k}:${String(v).replace(/"/g,"'")}`).join(';'); }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ── Default library ───────────────────────────────────────────────────────────
@@ -91,9 +181,44 @@ function getDefaultLib() {
     banner:{ background:'#f9fafb', color:'#111827', borderLeft:'4px solid #111827', padding:'16px 20px', borderRadius:'0px', fontSize:'1em', fontWeight:'normal' },
     card:{ background:'#ffffff', border:'1px solid #e5e7eb', borderRadius:'0px', padding:'24px', titleColor:'#111827', textColor:'#4b5563', titleSize:'1.25em' },
     button:{ background:'#000000', color:'#ffffff', borderRadius:'0px', padding:'10px 24px', fontSize:'1em', fontWeight:'normal', border:'1px solid #000000', textDecoration:'none', display:'inline-block' },
-    accordion:{ summaryBackground:'#f9fafb', summaryColor:'#111827', summaryPadding:'12px 16px', contentBackground:'#ffffff', contentPadding:'16px', border:'1px solid #e5e7eb', borderRadius:'0px', fontWeight:'bold' },
+    accordion:{ summaryBackground:'#f9fafb', summaryColor:'#111827', summaryPadding:'12px 16px', contentBackground:'#ffffff', contentColor:'#4b5563', contentPadding:'16px', border:'1px solid #e5e7eb', borderRadius:'0px', fontWeight:'bold' },
     blockquote:{ borderLeft:'4px solid #111827', background:'#ffffff', color:'#4b5563', padding:'16px 20px', fontStyle:'italic', borderRadius:'0px' },
     table:{ headerBackground:'#f3f4f6', headerColor:'#111827', rowBackground:'#ffffff', altRowBackground:'#f9fafb', border:'1px solid #e5e7eb', cellPadding:'12px 16px' },
+    alert: {
+      infoBackground: '#eff6ff', infoColor: '#1e40af', infoBorderColor: '#3b82f6',
+      successBackground: '#f0fdf4', successColor: '#166534', successBorderColor: '#22c55e',
+      warningBackground: '#fffbeb', warningColor: '#92400e', warningBorderColor: '#f59e0b',
+      dangerBackground: '#fff1f2', dangerColor: '#991b1b', dangerBorderColor: '#f43f5e',
+      borderRadius: '8px',
+    },
+    badge: {
+      background: '', color: '#ffffff',
+      borderRadius: '20px', padding: '3px 10px', fontSize: '0.78em',
+    },
+    dropdown: {
+      menuBackground: '#ffffff', itemColor: '#111827', borderRadius: '8px',
+    },
+    listgroup: {
+      evenBackground: '#ffffff', oddBackground: '#f9fafb',
+      color: '#111827', borderRadius: '8px', padding: '11px 16px',
+    },
+    progress: {
+      colorFrom: '', colorTo: '',
+      trackBackground: '#e2e8f0', height: '10px', borderRadius: '8px',
+    },
+    navbar: {
+      background: '', brandColor: '', linkColor: '',
+      borderRadius: '10px', padding: '12px 20px',
+    },
+    breadcrumb: {
+      linkColor: '', separatorColor: '#9ca3af',
+      activeColor: '', separator: '/',
+    },
+    pagination: {
+      activeBackground: '', activeColor: '#ffffff',
+      inactiveBackground: '#f1f5f9', inactiveColor: '',
+      borderRadius: '6px',
+    },
   };
 }
 
@@ -130,8 +255,8 @@ function makeButton(label, href, lib) {
 }
 
 function makeAccordion(title, content, lib) {
-  const a = lib.accordion, ty = lib.typography;
-  return `<details style="${css({border:a.border,'border-radius':a.borderRadius,margin:'8px 0',overflow:'hidden'})}"><summary style="${css({background:a.summaryBackground,color:a.summaryColor,padding:a.summaryPadding,'font-weight':a.fontWeight,'font-family':ty.headingFont,cursor:'pointer',display:'block'})}">${title}</summary><div style="${css({background:a.contentBackground,color:a.contentColor,padding:a.contentPadding,'font-family':ty.bodyFont,'line-height':ty.lineHeight})}">${content || '<p>Contenido del acordeón</p>'}</div></details>`;
+  const a = lib.accordion, ty = lib.typography, pl = lib.palette || {text: '#111827'};
+  return `<details style="${css({border:a.border,'border-radius':a.borderRadius,margin:'8px 0',overflow:'hidden'})}"><summary style="${css({background:a.summaryBackground,color:a.summaryColor,padding:a.summaryPadding,'font-weight':a.fontWeight,'font-family':ty.headingFont,cursor:'pointer',display:'block'})}">${title}</summary><div style="${css({background:a.contentBackground,color:a.contentColor || pl.text,padding:a.contentPadding,'font-family':ty.bodyFont,'line-height':ty.lineHeight})}">${content || '<p>Contenido del acordeón</p>'}</div></details>`;
 }
 
 function makeBlockquote(text, author, lib) {
@@ -182,14 +307,14 @@ function makeProgress(label, percent, lib) {
 
 
 function makeBreadcrumb(items, lib) {
-  const br = lib.breadcrumb, ty = lib.typography;
+  const br = lib.breadcrumb, ty = lib.typography, pl = lib.palette;
   const navStyle = css({display:'flex','align-items':'center','flex-wrap':'wrap',gap:'6px',margin:'12px 0','font-family':ty.bodyFont,'font-size':'0.9em'});
-  const linkStyle = css({color:br.linkColor,'text-decoration':'none','font-weight':'500'});
+  const linkStyle = css({color:br.linkColor || pl.primary,'text-decoration':'none','font-weight':'500'});
   const sepStyle  = css({color:br.separatorColor});
   const parts = items.map((item, i) => {
     const isLast = i === items.length - 1;
     const label = isLast
-      ? `<span style="${css({color:br.activeColor,'font-weight':'600'})}">${esc(item.label)}</span>`
+      ? `<span style="${css({color:br.activeColor || pl.text,'font-weight':'600'})}">${esc(item.label)}</span>`
       : `<a href="${esc(item.href||'#')}" style="${linkStyle}">${esc(item.label)}</a>`;
     return label + (isLast ? '' : `<span style="${sepStyle}"> ${br.separator || '/'} </span>`);
   }).join('');
@@ -197,11 +322,15 @@ function makeBreadcrumb(items, lib) {
 }
 
 function makeListGroup(items, lib) {
-  const lg = lib.listgroup, ty = lib.typography;
+  const lg = lib.listgroup, ty = lib.typography, pl = lib.palette;
+  
+  let txtCol = lg.color || pl.text;
+  if (txtCol === '#ffffff' && lg.evenBackground === '#ffffff') txtCol = '#1e293b';
+
   const ulStyle = css({'list-style':'none',padding:'0',margin:'12px 0',border:`1px solid #e2e8f0`,'border-radius':lg.borderRadius,overflow:'hidden'});
   const rows = items.map((item, i) => {
     const bg = i % 2 === 0 ? lg.evenBackground : lg.oddBackground;
-    return `<li style="${css({padding:lg.padding,'border-bottom':i<items.length-1?'1px solid #e2e8f0':'none',background:bg,'font-family':ty.bodyFont,color:lg.color,'font-size':'0.95em','line-height':'1.5'})}">${esc(item)}</li>`;
+    return `<li style="${css({padding:lg.padding,'border-bottom':i<items.length-1?'1px solid #e2e8f0':'none',background:bg,'font-family':ty.bodyFont,color:txtCol,'font-size':'0.95em','line-height':'1.5'})}">${esc(item)}</li>`;
   }).join('');
   return `<ul style="${ulStyle}">${rows}</ul>`;
 }
@@ -218,20 +347,20 @@ function makeButtonGroup(labels, lib) {
 }
 
 function makeNavBar(brand, links, lib) {
-  const nb = lib.navbar, ty = lib.typography;
-  const navStyle = css({background:nb.background,'border-radius':nb.borderRadius,padding:nb.padding,display:'flex','align-items':'center',gap:'8px',margin:'16px 0','flex-wrap':'wrap'});
-  const brandStyle = css({color:nb.brandColor,'font-weight':'700','font-size':'1.05em','text-decoration':'none','font-family':ty.headingFont,'margin-right':'auto'});
-  const linkStyle  = css({color:nb.linkColor,'text-decoration':'none','font-size':'0.9em','font-family':ty.bodyFont,padding:'4px 10px','border-radius':'6px'});
+  const nb = lib.navbar, ty = lib.typography, pl = lib.palette;
+  const navStyle = css({background:nb.background || pl.primary,'border-radius':nb.borderRadius,padding:nb.padding,display:'flex','align-items':'center',gap:'8px',margin:'16px 0','flex-wrap':'wrap'});
+  const brandStyle = css({color:nb.brandColor || '#ffffff','font-weight':'700','font-size':'1.05em','text-decoration':'none','font-family':ty.headingFont,'margin-right':'auto'});
+  const linkStyle  = css({color:nb.linkColor || 'rgba(255,255,255,0.8)','text-decoration':'none','font-size':'0.9em','font-family':ty.bodyFont,padding:'4px 10px','border-radius':'6px'});
   const linkItems  = links.map(l=>`<a href="#" style="${linkStyle}">${esc(l)}</a>`).join('');
   return `<nav style="${navStyle}"><a href="#" style="${brandStyle}">${esc(brand)}</a>${linkItems}</nav>`;
 }
 
 function makePagination(items, lib) {
-  const pg = lib.pagination, ty = lib.typography;
+  const pg = lib.pagination, ty = lib.typography, pl = lib.palette;
   const navStyle = css({display:'flex','justify-content':'center','align-items':'center',gap:'5px',margin:'16px 0','font-family':ty.bodyFont});
   const base = css({'border-radius':pg.borderRadius,padding:'7px 13px','font-size':'0.9em','text-decoration':'none','font-weight':'500',display:'inline-block'});
-  const inactive = `${base};background:${pg.inactiveBackground};color:${pg.inactiveColor};border:1px solid #e2e8f0`;
-  const active   = `${base};background:${pg.activeBackground};color:${pg.activeColor};border:1px solid ${pg.activeBackground}`;
+  const inactive = `${base};background:${pg.inactiveBackground};color:${pg.inactiveColor || pl.text};border:1px solid #e2e8f0`;
+  const active   = `${base};background:${pg.activeBackground || pl.primary};color:${pg.activeColor || '#ffffff'};border:1px solid ${pg.activeBackground || pl.primary}`;
   const disabled = `${base};background:#f8fafc;color:#9ca3af;border:1px solid #e2e8f0;pointer-events:none`;
 
   if (typeof items === 'number') {
@@ -263,11 +392,15 @@ function makePagination(items, lib) {
 
 function makeDropdown(label, items, lib) {
   // CSS-only dropdown using details/summary (no JS needed)
-  const dp = lib.dropdown, ty = lib.typography, b = lib.button;
+  const dp = lib.dropdown, ty = lib.typography, b = lib.button, pl = lib.palette;
+  const menuBg = dp.menuBackground;
+  let itemCol = dp.itemColor || pl.text;
+  if (itemCol === '#ffffff' && menuBg === '#ffffff') itemCol = '#1e293b';
+
   const detailsStyle = css({display:'inline-block',position:'relative',margin:'8px 0'});
   const summaryStyle = css({background:b.background,color:b.color,'border-radius':b.borderRadius,padding:b.padding,'font-size':b.fontSize,'font-weight':b.fontWeight,'font-family':ty.bodyFont,cursor:'pointer','list-style':'none',display:'inline-block'});
-  const menuStyle = css({position:'static',background:dp.menuBackground,border:'1px solid #e2e8f0','border-radius':dp.borderRadius,margin:'4px 0',overflow:'hidden','min-width':'160px','box-shadow':'0 4px 12px rgba(0,0,0,0.1)'});
-  const itemStyle = css({display:'block',padding:'10px 16px',color:dp.itemColor,'text-decoration':'none','font-family':ty.bodyFont,'font-size':'0.9em','border-bottom':'1px solid #f1f5f9'});
+  const menuStyle = css({position:'static',background:menuBg,border:'1px solid #e2e8f0','border-radius':dp.borderRadius,margin:'4px 0',overflow:'hidden','min-width':'160px','box-shadow':'0 4px 12px rgba(0,0,0,0.1)'});
+  const itemStyle = css({display:'block',padding:'10px 16px',color:itemCol,'text-decoration':'none','font-family':ty.bodyFont,'font-size':'0.9em','border-bottom':'1px solid #f1f5f9'});
   const rows = items.map(item => `<a href="#" style="${itemStyle}">${esc(item)}</a>`).join('');
   return `<details style="${detailsStyle}"><summary style="${summaryStyle}">${esc(label)} ▾</summary><div style="${menuStyle}">${rows}</div></details>`;
 }
@@ -294,7 +427,19 @@ function extractHrefFromHTML(html) {
 }
 
 // Export via global for part 2
-window.__CD = { t, settings, getSettings: ()=>settings, getLib: ()=>styleLib||getDefaultLib(),
+window.__CD = { t, settings, getSettings: ()=>settings, getLib: ()=>{
+    const def = getDefaultLib();
+    if (!styleLib) return def;
+    const merged = JSON.parse(JSON.stringify(def));
+    for (const [k, v] of Object.entries(styleLib)) {
+      if (v && typeof v === 'object' && merged[k] && typeof merged[k] === 'object') {
+        merged[k] = { ...merged[k], ...v };
+      } else {
+        merged[k] = v;
+      }
+    }
+    return merged;
+  },
   makeHero, makeBanner, makeCard, makeButton, makeAccordion, makeBlockquote,
   makeAlert, makeBadge, makeProgress, makeBreadcrumb, makeListGroup,
   makeButtonGroup, makeNavBar, makePagination, makeDropdown, makeCardGrid,
