@@ -56,9 +56,10 @@
     <!-- Controls -->
     <aside class="controls-panel">
       <div class="controls-tabs">
-        <button class="ctrl-tab active" data-tab="palette" id="tab-palette">🎨 Paleta</button>
-        <button class="ctrl-tab" data-tab="typography" id="tab-typography">Aa Tipografía</button>
-        <button class="ctrl-tab" data-tab="components" id="tab-components">⊞ Componentes</button>
+        <button class="ctrl-tab active" data-tab="palette" id="tab-palette" data-i18n="tabPalette">🎨 Paleta</button>
+        <button class="ctrl-tab" data-tab="typography" id="tab-typography" data-i18n="tabTypo">Aa Tipografía</button>
+        <button class="ctrl-tab" data-tab="components" id="tab-components" data-i18n="tabComp">⊞ Componentes</button>
+        <button class="ctrl-tab" data-tab="config" id="tab-config" data-i18n="tabConfig">⚙️ Configuración</button>
       </div>
       <div class="controls-body">
 
@@ -767,6 +768,30 @@
           </div>
 
         </div><!-- /pane-components -->
+
+        <!-- CONFIG TAB -->
+        <div class="ctrl-pane" id="pane-config">
+          <div class="field">
+            <div class="field-label"><span data-i18n="configBuiltinDomains">Dominios integrados (siempre activos)</span></div>
+            <ul id="config-builtin-list" style="margin:4px 0 12px; padding-left:16px; font-size:13px; opacity:0.7;">
+              <li>*.instructure.com</li>
+              <li>*.canvas.net</li>
+              <li>*.canvaslms.com</li>
+            </ul>
+          </div>
+          <div class="field">
+            <div class="field-label"><span data-i18n="configCustomUrls">Dominios personalizados</span></div>
+            <p style="font-size:12px; opacity:0.65; margin:4px 0 8px;" data-i18n="configUrlHint">Ingresa el dominio de tu institución (ej: canvas.miuniversidad.edu)</p>
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+              <input type="text" id="config-url-input" class="ctrl-input" placeholder="canvas.myuniversity.edu" style="flex:1;">
+              <button class="btn-save" id="config-url-add" data-i18n="configAddUrl">Agregar dominio</button>
+            </div>
+            <ul id="config-custom-list" style="margin:0; padding:0; list-style:none;"></ul>
+            <p id="config-none-msg" style="font-size:12px; opacity:0.55; margin:4px 0;" data-i18n="configNone">No hay dominios personalizados.</p>
+          </div>
+          <div id="config-status" style="font-size:12px; margin-top:8px; min-height:18px;"></div>
+        </div><!-- /pane-config -->
+
       </div><!-- /controls-body -->
     </aside>
   </div><!-- /app-main -->

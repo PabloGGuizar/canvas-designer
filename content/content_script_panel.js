@@ -4,38 +4,40 @@
   const CD = window.__CD;
 
   // ── Options config per component ──────────────────────────────────────────
-  const COMPONENT_OPTIONS = {
-    'alert': {
-      label: 'Tipo de alerta',
-      variants: [
-        { id:'info',    icon:'ℹ️', label:'Info' },
-        { id:'success', icon:'✅', label:'Éxito' },
-        { id:'warning', icon:'⚠️', label:'Aviso' },
-        { id:'danger',  icon:'🚫', label:'Error' },
-      ]
-    },
-    'button': {
-      label: 'Estilo del botón',
-      variants: [
-        { id:'primary',   icon:'■', label:'Primario' },
-        { id:'outlined',  icon:'□', label:'Secundario' },
-        { id:'pill',      icon:'◉', label:'Redondeado' },
-      ]
-    },
-    'badge': {
-      label: 'Color de la insignia',
-      variants: [
-        { id:'primary',   icon:'●', label:'Primario' },
-        { id:'secondary', icon:'●', label:'Secundario' },
-        { id:'accent',    icon:'●', label:'Acento' },
-        { id:'success',   icon:'●', label:'Éxito' },
-      ]
-    },
-    'progress': {
-      label: 'Porcentaje (del texto seleccionado o escribe)',
-      isProgress: true,
-    },
-  };
+  function getComponentOptions() {
+    return {
+      'alert': {
+        label: CD.t('optAlertLabel'),
+        variants: [
+          { id:'info',    icon:'ℹ️', label: CD.t('optAlertInfo') },
+          { id:'success', icon:'✅', label: CD.t('optAlertSuccess') },
+          { id:'warning', icon:'⚠️', label: CD.t('optAlertWarning') },
+          { id:'danger',  icon:'🚫', label: CD.t('optAlertDanger') },
+        ]
+      },
+      'button': {
+        label: CD.t('optBtnLabel'),
+        variants: [
+          { id:'primary',  icon:'■', label: CD.t('optBtnPrimary') },
+          { id:'outlined', icon:'□', label: CD.t('optBtnOutlined') },
+          { id:'pill',     icon:'◉', label: CD.t('optBtnPill') },
+        ]
+      },
+      'badge': {
+        label: CD.t('optBadgeLabel'),
+        variants: [
+          { id:'primary',   icon:'●', label: CD.t('optBadgePrimary') },
+          { id:'secondary', icon:'●', label: CD.t('optBadgeSecondary') },
+          { id:'accent',    icon:'●', label: CD.t('optBadgeAccent') },
+          { id:'success',   icon:'●', label: CD.t('optBadgeSuccess') },
+        ]
+      },
+      'progress': {
+        label: CD.t('optProgressLabel'),
+        isProgress: true,
+      },
+    };
+  }
 
   // Components that apply immediately (no variant picker needed)
   const INSTANT = ['hero','banner','card','accordion','blockquote','listgroup','cardgrid','navbar','breadcrumb','pagination','btngroup','dropdown'];
@@ -168,7 +170,7 @@
     };
 
     let h = '';
-    const optsConfig = COMPONENT_OPTIONS[type];
+    const optsConfig = getComponentOptions()[type];
     if (optsConfig && optsConfig.variants) {
       h += addSelect('f-variant', optsConfig.label, optsConfig.variants);
     }
@@ -723,7 +725,7 @@
            <span>${CD.t(key)}</span>
            ${hasOpts ? '<span class="cd-opts-arrow">▾</span>' : ''}
          </button>
-         <button class="cd-instant-btn" data-type="${type}" title="Inserción Rápida" style="position:absolute; top:4px; right:4px; background:none; border:none; cursor:pointer; font-size:12px; opacity:0.6; padding:4px;">🪄</button>
+         <button class="cd-instant-btn" data-type="${type}" title="${CD.t('quickInsert')}" style="position:absolute; top:4px; right:4px; background:none; border:none; cursor:pointer; font-size:12px; opacity:0.6; padding:4px;">🪄</button>
        </div>`;
 
     return `
@@ -731,7 +733,7 @@
   <div id="cd-header">
     <div class="cd-logo">🎨 Canvas Designer</div>
     <div>
-      <button id="cd-theme-btn" title="Cambiar Tema" style="background:none;border:none;cursor:pointer;font-size:16px;margin-right:8px;color:inherit;">${s.theme === 'light' ? '🌙' : '☀️'}</button>
+      <button id="cd-theme-btn" title="${CD.t('changeTheme')}" style="background:none;border:none;cursor:pointer;font-size:16px;margin-right:8px;color:inherit;">${s.theme === 'light' ? '🌙' : '☀️'}</button>
       <button id="cd-lang-btn">${s.lang === 'es' ? 'EN' : 'ES'}</button>
     </div>
   </div>
@@ -789,7 +791,7 @@
       <button class="cd-btn cd-btn-primary" id="cd-btn-open-builder">🎨 ${CD.t('openBuilder')}</button>
       <div class="cd-divider"></div>
       <div class="cd-field">
-        <label class="cd-label">Idioma / Language</label>
+        <label class="cd-label">${CD.t('languageLabel')}</label>
         <div style="display:flex;gap:8px">
           <button class="cd-btn cd-btn-secondary" id="cd-btn-es" style="flex:1">🇲🇽 Español</button>
           <button class="cd-btn cd-btn-secondary" id="cd-btn-en" style="flex:1">🇺🇸 English</button>

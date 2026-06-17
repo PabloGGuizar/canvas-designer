@@ -3,12 +3,13 @@
   "name": "Canvas Designer",
   "version": "0.2.0",
   "description": "Diseña visualmente páginas de Canvas LMS con asistencia de IA / Visually design Canvas LMS pages with AI assistance.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "scripting"],
   "host_permissions": [
     "*://*.instructure.com/*",
     "*://*.canvas.net/*",
     "*://*.canvaslms.com/*"
   ],
+  "optional_host_permissions": ["*://*/*"],
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",
@@ -35,11 +36,7 @@
   "web_accessible_resources": [
     {
       "resources": ["content/rce_bridge.js", "content/content_script_panel.js"],
-      "matches": [
-        "*://*.instructure.com/*",
-        "*://*.canvas.net/*",
-        "*://*.canvaslms.com/*"
-      ]
+      "matches": ["<all_urls>"]
     }
   ]
 }
