@@ -172,7 +172,7 @@ const MODERN_THEME = {
 const I18N = {
   es: {
     save: 'Guardar librería', reset: 'Restablecer', preview: 'Vista previa — Página de Canvas',
-    tabPalette: '🎨 Paleta', tabTypo: 'Aa Tipografía', tabComp: '⊞ Componentes',
+    tabPalette: '🎨 Paleta', tabTypo: 'Aa Tipografía', tabComp: '⊞ Componentes', tabConfig: '⚙️ Configuración',
     sub: 'Constructor de Estilos', saved: '¡Librería guardada!', resetDone: 'Valores restablecidos.',
     tplActual: 'Plantilla Actual',
     saveNew: 'Guardar como nueva',
@@ -299,11 +299,24 @@ const I18N = {
     prTdConcepts: 'Conceptos clave',
     prTdQuiz: 'Cuestionario',
     prTdApp: 'Aplicación',
-    prTdProject: 'Proyecto'
+    prTdProject: 'Proyecto',
+
+    // Config tab
+    configCustomUrls: 'Dominios personalizados',
+    configBuiltinDomains: 'Dominios integrados (siempre activos)',
+    configAddUrl: 'Agregar dominio',
+    configUrlPlaceholder: 'canvas.miuniversidad.edu',
+    configUrlHint: 'Ingresa el dominio de tu institución (ej: canvas.miuniversidad.edu)',
+    configUrlAdded: '✅ Dominio agregado. Recarga la pestaña de Canvas.',
+    configUrlRemoved: 'Dominio eliminado.',
+    configUrlInvalid: 'Dominio no válido.',
+    configPermDenied: 'Permiso denegado por el navegador.',
+    configRequiresReload: 'Recarga la pestaña de Canvas para activar el nuevo dominio.',
+    configNone: 'No hay dominios personalizados.'
   },
   en: {
     save: 'Save library', reset: 'Reset', preview: 'Preview — Canvas Page',
-    tabPalette: '🎨 Palette', tabTypo: 'Aa Typography', tabComp: '⊞ Components',
+    tabPalette: '🎨 Palette', tabTypo: 'Aa Typography', tabComp: '⊞ Components', tabConfig: '⚙️ Config',
     sub: 'Style Builder', saved: 'Library saved!', resetDone: 'Values reset.',
     tplActual: 'Current Template',
     saveNew: 'Save as new',
@@ -430,7 +443,20 @@ const I18N = {
     prTdConcepts: 'Key concepts',
     prTdQuiz: 'Quiz',
     prTdApp: 'Application',
-    prTdProject: 'Project'
+    prTdProject: 'Project',
+
+    // Config tab
+    configCustomUrls: 'Custom domains',
+    configBuiltinDomains: 'Built-in domains (always active)',
+    configAddUrl: 'Add domain',
+    configUrlPlaceholder: 'canvas.myuniversity.edu',
+    configUrlHint: 'Enter your institution\'s Canvas domain (e.g. canvas.myuniversity.edu)',
+    configUrlAdded: '✅ Domain added. Reload your Canvas tab.',
+    configUrlRemoved: 'Domain removed.',
+    configUrlInvalid: 'Invalid domain.',
+    configPermDenied: 'Permission denied by browser.',
+    configRequiresReload: 'Reload the Canvas tab to activate the new domain.',
+    configNone: 'No custom domains added.'
   }
 };
 
@@ -994,6 +1020,10 @@ function applyLang() {
 
 function translatePageOnStart() {
   const dictionaryMap = {
+    '🎨 Paleta': 'tabPalette',
+    'Aa Tipografía': 'tabTypo',
+    '⊞ Componentes': 'tabComp',
+    '⚙️ Configuración': 'tabConfig',
     'Plantilla Actual': 'tplActual',
     'Guardar como nueva': 'saveNew',
     'Eliminar plantilla': 'deleteTpl',
@@ -1269,6 +1299,101 @@ async function init() {
     };
     reader.readAsText(file);
   });
+
+  // ── Config Tab ────────────────────────────────────────────────────────────
+  initConfigTab(settings);
+}
+
+// ── Config Tab ────────────────────────────────────────────────────────────────
+function normalizeUrlPattern(input) {
+  input = input.trim().replace(/^https?:\/\//, '');
+  // Strip trailing slashes
+  input = input.replace(/\/+$/, '');
+  if (!input) return null;
+  // Build match pattern: *://<host>/*
+  const pattern = `*://${input}/*`;
+  if (!/^\*:\/\/[^/]+\/\*$/.test(pattern)) return null;
+  return pattern;
+}
+
+function initConfigTab(settings) {
+  const listEl   = document.getElementById('config-custom-list');
+  const noneMsg  = document.getElementById('config-none-msg');
+  const statusEl = document.getElementById('config-status');
+  const input    = document.getElementById('config-url-input');
+  const addBtn   = document.getElementById('config-url-add');
+
+  if (!listEl || !addBtn) return;
+
+  // Translate placeholder to current language
+  input.placeholder = t('configUrlPlaceholder');
+
+  function setStatus(msg, ok = true) {
+    statusEl.textContent = msg;
+    statusEl.style.color = ok ? 'var(--accent, #6366f1)' : '#ef4444';
+    setTimeout(() => { statusEl.textContent = ''; }, 4000);
+  }
+
+  function renderCustomUrls(urls) {
+    listEl.innerHTML = '';
+    noneMsg.style.display = urls.length ? 'none' : '';
+    urls.forEach(pattern => {
+      const li = document.createElement('li');
+      li.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:4px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.07);';
+      const span = document.createElement('span');
+      span.textContent = pattern;
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '✕';
+      removeBtn.style.cssText = 'background:none; border:none; cursor:pointer; color:#ef4444; font-size:14px; padding:2px 6px;';
+      removeBtn.title = t('removeBtn') || 'Remove';
+      removeBtn.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'REMOVE_CUSTOM_URL', pattern }, (res) => {
+          if (res?.ok) {
+            setStatus(t('configUrlRemoved'), true);
+            reloadCustomUrls();
+          }
+        });
+      });
+      li.appendChild(span);
+      li.appendChild(removeBtn);
+      listEl.appendChild(li);
+    });
+  }
+
+  function reloadCustomUrls() {
+    chrome.runtime.sendMessage({ type: 'GET_SETTINGS' }, (res) => {
+      const urls = res?.settings?.customUrls || [];
+      renderCustomUrls(urls);
+    });
+  }
+
+  addBtn.addEventListener('click', () => {
+    const pattern = normalizeUrlPattern(input.value);
+    if (!pattern) {
+      setStatus(t('configUrlInvalid'), false);
+      return;
+    }
+    chrome.runtime.sendMessage({ type: 'ADD_CUSTOM_URL', pattern }, (res) => {
+      if (!res?.ok) {
+        const msg = res?.error === 'permission_denied' ? t('configPermDenied') : t('configUrlInvalid');
+        setStatus(msg, false);
+        return;
+      }
+      input.value = '';
+      setStatus(t('configUrlAdded'), true);
+      reloadCustomUrls();
+    });
+  });
+
+  // Load initial list
+  reloadCustomUrls();
+
+  // Re-translate static elements when language changes
+  const origApplyLang = applyLang;
+  applyLang = function() {
+    origApplyLang();
+    input.placeholder = t('configUrlPlaceholder');
+  };
 }
 
 init();

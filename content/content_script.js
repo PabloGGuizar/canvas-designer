@@ -62,7 +62,19 @@ const i18n = {
     dfHome: 'Inicio',
     dfHeroTitle: 'Título del Héroe',
     dfQuoteHighlight: 'Texto destacado para la cita',
-    dfAccordionTitle: 'Título del acordeón'
+    dfAccordionTitle: 'Título del acordeón',
+
+    // Component option labels & variants
+    optAlertLabel: 'Tipo de alerta',
+    optAlertInfo: 'Info', optAlertSuccess: 'Éxito', optAlertWarning: 'Aviso', optAlertDanger: 'Error',
+    optBtnLabel: 'Estilo del botón',
+    optBtnPrimary: 'Primario', optBtnOutlined: 'Secundario', optBtnPill: 'Redondeado',
+    optBadgeLabel: 'Color de la insignia',
+    optBadgePrimary: 'Primario', optBadgeSecondary: 'Secundario', optBadgeAccent: 'Acento', optBadgeSuccess: 'Éxito',
+    optProgressLabel: 'Porcentaje (del texto seleccionado o escribe)',
+    quickInsert: 'Inserción Rápida',
+    changeTheme: 'Cambiar Tema',
+    languageLabel: 'Idioma / Language'
   },
   en: {
     hint: 'Select text and choose a transformation:',
@@ -124,7 +136,19 @@ const i18n = {
     dfHome: 'Home',
     dfHeroTitle: 'Hero Title',
     dfQuoteHighlight: 'Highlighted quote text',
-    dfAccordionTitle: 'Accordion Title'
+    dfAccordionTitle: 'Accordion Title',
+
+    // Component option labels & variants
+    optAlertLabel: 'Alert type',
+    optAlertInfo: 'Info', optAlertSuccess: 'Success', optAlertWarning: 'Warning', optAlertDanger: 'Error',
+    optBtnLabel: 'Button style',
+    optBtnPrimary: 'Primary', optBtnOutlined: 'Outlined', optBtnPill: 'Pill',
+    optBadgeLabel: 'Badge color',
+    optBadgePrimary: 'Primary', optBadgeSecondary: 'Secondary', optBadgeAccent: 'Accent', optBadgeSuccess: 'Success',
+    optProgressLabel: 'Percentage (from selected text or type)',
+    quickInsert: 'Quick Insert',
+    changeTheme: 'Change Theme',
+    languageLabel: 'Language'
   }
 };
 
